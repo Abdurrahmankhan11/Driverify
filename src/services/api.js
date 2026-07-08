@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://br2bkzxc-8000.inc1.devtunnels.ms/',
+  baseURL: 'https://vx1wlxgw-8000.inc1.devtunnels.ms/',
   headers: {
     'Content-Type': 'application/json',
     'X-Tunnel-Skip-Anti-Spam-Page': 'true',
@@ -44,7 +44,7 @@ api.interceptors.response.use(
 
         // Call the refresh token endpoint using raw axios to avoid interceptor issues
         const response = await axios.post(
-          'https://br2bkzxc-8000.inc1.devtunnels.ms/auth/token/refresh/',
+          'https://vx1wlxgw-8000.inc1.devtunnels.ms/auth/token/refresh/',
           { refresh: refreshToken },
           {
             headers: {
@@ -99,19 +99,19 @@ export const authService = {
     return res.data;
   },
  getCountries: async () => {
-  const res = await api.get('/mp/countries');
+  const res = await api.get('/mp/countries/');
   return res.data.data;
 },
 
 getStates: async (countryName) => {
-  const res = await api.get('/mp/states', {
+  const res = await api.get('/mp/states/', {
     params: { country: countryName },
   });
   return res.data.data;
 },
 
 getCities: async (countryName, stateName) => {
-  const res = await api.get('/mp/cities', {
+  const res = await api.get('/mp/cities/', {
     params: {
       country: countryName,
       state: stateName,

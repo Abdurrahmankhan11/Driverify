@@ -581,23 +581,33 @@ const CompleteProfile = () => {
   useEffect(() => {
     const loadSavedData = async () => {
       if (user && countriesList.length > 0) {
-        const countryName = user.country || '';
-        const stateName = user.state || '';
-        const cityName = user.city || '';
+        const countryId = user.country || '';
+        const stateId = user.state || '';
+        const cityId = user.city || '';
 
         setFormData({
           full_name: user.full_name || '',
-          country: countryName,
-          state: stateName,
-          city: cityName,
+          country: countryId,
+          state: stateId,
+          city: cityId,
           address: user.address || '',
           pincode: user.pincode || '',
         });
+
+        const countryObj = countriesList.find(
+          (c) => String(c.id) === String(countryId) || c.name === countryId
+        );
+        const countryName = countryObj ? countryObj.name : '';
 
         if (countryName) {
           try {
             const statesData = await authService.getStates(countryName);
             setStatesList(statesData || []);
+
+            const stateObj = statesData.find(
+              (s) => String(s.id) === String(stateId) || s.name === stateId
+            );
+            const stateName = stateObj ? stateObj.name : '';
 
             if (stateName) {
               const citiesData = await authService.getCities(
@@ -617,20 +627,25 @@ const CompleteProfile = () => {
   }, [user, countriesList]);
 
   const handleCountryChange = async (e) => {
-    const countryName = e.target.value;
+    const countryId = e.target.value;
 
     setErrors((prev) => ({ ...prev, country: '', state: '', city: '' }));
     setNonFieldErrors([]);
 
     setFormData((prev) => ({
       ...prev,
-      country: countryName,
+      country: countryId,
       state: '',
       city: '',
     }));
 
     setStatesList([]);
     setCitiesList([]);
+
+    const countryObj = countriesList.find(
+      (c) => String(c.id) === String(countryId) || c.name === countryId
+    );
+    const countryName = countryObj ? countryObj.name : '';
 
     if (countryName) {
       try {
@@ -643,22 +658,32 @@ const CompleteProfile = () => {
   };
 
   const handleStateChange = async (e) => {
-    const stateName = e.target.value;
+    const stateId = e.target.value;
 
     setErrors((prev) => ({ ...prev, state: '', city: '' }));
     setNonFieldErrors([]);
 
     setFormData((prev) => ({
       ...prev,
-      state: stateName,
+      state: stateId,
       city: '',
     }));
 
     setCitiesList([]);
 
-    if (formData.country && stateName) {
+    const countryObj = countriesList.find(
+      (c) => String(c.id) === String(formData.country) || c.name === formData.country
+    );
+    const countryName = countryObj ? countryObj.name : '';
+
+    const stateObj = statesList.find(
+      (s) => String(s.id) === String(stateId) || s.name === stateId
+    );
+    const stateName = stateObj ? stateObj.name : '';
+
+    if (countryName && stateName) {
       try {
-        const data = await authService.getCities(formData.country, stateName);
+        const data = await authService.getCities(countryName, stateName);
         setCitiesList(data || []);
       } catch (err) {
         console.error('Failed to load cities:', err);
@@ -901,7 +926,7 @@ const CompleteProfile = () => {
                     >
                       <option value="">Select Country</option>
                       {countriesList.map((c) => (
-                        <option key={c.name} value={c.name}>
+                        <option key={c.id} value={c.id}>
                           {c.name}
                         </option>
                       ))}
@@ -944,7 +969,7 @@ const CompleteProfile = () => {
                     >
                       <option value="">Select State</option>
                       {statesList.map((s) => (
-                        <option key={s.name} value={s.name}>
+                        <option key={s.id} value={s.id}>
                           {s.name}
                         </option>
                       ))}
@@ -990,7 +1015,7 @@ const CompleteProfile = () => {
                     >
                       <option value="">Select City</option>
                       {citiesList.map((c) => (
-                        <option key={c.name} value={c.name}>
+                        <option key={c.id} value={c.id}>
                           {c.name}
                         </option>
                       ))}
