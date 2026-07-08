@@ -66,21 +66,23 @@ const Navbar = () => {
                   <span className="max-w-[120px] truncate">{user?.full_name || 'My Profile'}</span>
                   <i className="fa-solid fa-chevron-down text-xs"></i>
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-[#E7E5E4] rounded-xl shadow-lg py-2 hidden group-hover:block transition-all">
-                  <button
-                    onClick={() => navigate('/complete-profile')}
-                    className="w-full text-left px-4 py-2.5 text-sm text-[#18181B] hover:bg-[#F5F5F4] transition-colors flex items-center gap-2 cursor-pointer font-medium"
-                  >
-                    <i className="fa-regular fa-user"></i>
-                    {user?.profile_complete ? 'Edit Profile' : 'Complete Profile'}
-                  </button>
-                  <button
-                    onClick={() => { logout(); navigate('/'); }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-[#F5F5F4] transition-colors flex items-center gap-2 cursor-pointer font-medium"
-                  >
-                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                    Logout
-                  </button>
+                <div className="absolute right-0 top-full pt-2 w-48 hidden group-hover:block transition-all z-50">
+                  <div className="bg-white border border-[#E7E5E4] rounded-xl shadow-lg py-2">
+                    <button
+                      onClick={() => navigate('/complete-profile')}
+                      className="w-full text-left px-4 py-2.5 text-sm text-[#18181B] hover:bg-[#F5F5F4] transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                    >
+                      <i className="fa-regular fa-user"></i>
+                      {user?.profile_complete ? 'Edit Profile' : 'Complete Profile'}
+                    </button>
+                    <button
+                      onClick={() => { logout(); navigate('/'); }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-[#F5F5F4] transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                    >
+                      <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                      Logout
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
