@@ -2,6 +2,7 @@ import React from 'react';
 import VehicleCard from '../vehicles/VehicleCard';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const dummyVehicles = [
   {
@@ -86,6 +87,16 @@ const dummyVehicles = [
 
 const FeaturedVehicles = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
+
+  const handleViewAll = () => {
+    if (isAuthenticated && user?.role === 'USER') {
+      navigate('/dashboard/user/listings');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <section id="featured-vehicles" className="py-16 bg-white scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,7 +110,7 @@ const FeaturedVehicles = () => {
               Browse cars and bikes posted directly by vehicle owners.
             </p>
           </div>
-          <button onClick={() => navigate('/login')} className="flex items-center gap-2 text-[#b70a10] font-medium hover:text-[#A66548] transition-colors group pb-1">
+          <button onClick={handleViewAll} className="flex items-center gap-2 text-[#b70a10] font-medium hover:text-[#A66548] transition-colors group pb-1">
             View All Vehicles 
             <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
           </button>
