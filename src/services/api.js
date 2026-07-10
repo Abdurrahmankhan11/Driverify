@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { constants } from '../components/global/constants.jsx';
+import { constants } from '../constants/constants';
 
 const isDev = import.meta.env.DEV;
 

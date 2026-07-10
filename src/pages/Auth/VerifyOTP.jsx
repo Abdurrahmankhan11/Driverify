@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, ShieldCheck, RotateCcw, AlertTriangle } from 'lucide-react';
 import { authService } from '../../services/api';
-import { useAuth } from '../../components/context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const OTP_LENGTH = 6;
 
@@ -48,7 +48,7 @@ const VerifyOTP = () => {
 
   const handleChange = (index, value) => {
     if (isLockedOut) return;
-    
+
     // Only allow single digit
     if (value && !/^\d$/.test(value)) return;
 
@@ -94,10 +94,10 @@ const VerifyOTP = () => {
 
   const handleResend = async () => {
     if (!canResend || isResending || isLockedOut) return;
-    
+
     setIsResending(true);
     setError('');
-    
+
     try {
       const response = await authService.requestOTP(identifier, channel);
       setOtp(Array(OTP_LENGTH).fill(''));
@@ -136,13 +136,14 @@ const VerifyOTP = () => {
 
       // If user is new OR profile is incomplete, redirect to profile complete page
       if (response.is_new_user || !response.user.profile_complete) {
-        navigate('/complete-profile');
+        navigate('/complete-profile', { replace: true });
       } else {
-        navigate('/');
+        const role = response.user.role || 'USER';
+        navigate(`/dashboard/${role.toLowerCase()}`, { replace: true });
       }
     } catch (err) {
       setIsVerifying(false);
-      
+
       const status = err.response?.status;
       const detail = err.response?.data?.detail || 'Verification failed. Please try again.';
 
@@ -276,13 +277,12 @@ const VerifyOTP = () => {
                       onPaste={index === 0 ? handlePaste : undefined}
                       autoFocus={index === 0}
                       disabled={isLockedOut}
-                      className={`w-full aspect-square text-center text-xl font-bold rounded-xl border-2 transition-all duration-200 focus:outline-none ${
-                        error
+                      className={`w-full aspect-square text-center text-xl font-bold rounded-xl border-2 transition-all duration-200 focus:outline-none ${error
                           ? 'border-red-400 bg-red-50/50 text-red-600'
                           : digit
                             ? 'border-[#18181B] bg-[#F5F5F4] text-[#18181B]'
                             : 'border-[#E7E5E4] bg-white text-[#18181B] focus:border-[#b70a10] focus:ring-2 focus:ring-[#b70a10]/10'
-                      } ${isLockedOut ? 'opacity-50 cursor-not-allowed bg-[#F5F5F4]' : ''}`}
+                        } ${isLockedOut ? 'opacity-50 cursor-not-allowed bg-[#F5F5F4]' : ''}`}
                     />
                   ))}
                 </div>
@@ -306,9 +306,8 @@ const VerifyOTP = () => {
                     type="button"
                     onClick={handleResend}
                     disabled={isResending || isLockedOut}
-                    className={`inline-flex items-center gap-1.5 text-sm font-semibold text-[#b70a10] hover:text-[#A66548] transition-colors ${
-                      isResending || isLockedOut ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                    className={`inline-flex items-center gap-1.5 text-sm font-semibold text-[#b70a10] hover:text-[#A66548] transition-colors ${isResending || isLockedOut ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                   >
                     <RotateCcw size={14} className={isResending ? 'animate-spin' : ''} />
                     {isResending ? 'Resending...' : 'Resend OTP'}
@@ -324,11 +323,10 @@ const VerifyOTP = () => {
               <button
                 type="submit"
                 disabled={isVerifying || isLockedOut}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm ${
-                  isVerifying || isLockedOut
+                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm ${isVerifying || isLockedOut
                     ? 'bg-[#57534E] text-white/70 cursor-not-allowed'
                     : 'bg-[#18181B] hover:bg-[#27272A] text-white active:scale-[0.98]'
-                }`}
+                  }`}
               >
                 {isVerifying ? (
                   <>

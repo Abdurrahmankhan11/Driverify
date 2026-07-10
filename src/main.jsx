@@ -3,9 +3,12 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { TooltipProvider } from './components/ui/tooltip';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <TooltipProvider>
     <App />
+    </TooltipProvider>
   </StrictMode>,
 )

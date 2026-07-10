@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Car } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -76,6 +76,13 @@ const Navbar = () => {
                       {user?.profile_complete ? 'Edit Profile' : 'Complete Profile'}
                     </button>
                     <button
+                      onClick={() => navigate(`/dashboard/${(user?.role || 'USER').toLowerCase()}`)}
+                      className="w-full text-left px-4 py-2.5 text-sm text-[#18181B] hover:bg-[#F5F5F4] transition-colors flex items-center gap-2 cursor-pointer font-medium"
+                    >
+                      <i className="fa-solid fa-table-columns"></i>
+                      Dashboard
+                    </button>
+                    <button
                       onClick={() => { logout(); navigate('/'); }}
                       className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-[#F5F5F4] transition-colors flex items-center gap-2 cursor-pointer font-medium"
                     >
@@ -128,6 +135,13 @@ const Navbar = () => {
               >
                 <i className="fa-regular fa-user"></i>
                 {user?.profile_complete ? 'Edit Profile' : 'Complete Profile'}
+              </button>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); navigate(`/dashboard/${(user?.role || 'USER').toLowerCase()}`); }}
+                className="w-full text-left px-3 py-3 rounded-lg font-medium text-[#18181B] hover:bg-[#F5F5F4] transition-colors text-sm flex items-center gap-2 cursor-pointer"
+              >
+                <i className="fa-solid fa-table-columns"></i>
+                Dashboard
               </button>
               <button
                 onClick={() => { setIsMobileMenuOpen(false); logout(); navigate('/'); }}

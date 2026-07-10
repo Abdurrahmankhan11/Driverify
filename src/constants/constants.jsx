@@ -17,8 +17,10 @@ export const constants = {
       }
     `,
   roles: {
-
-  },
+    USER: 'USER',
+    MIDDLEMAN: 'MIDDLEMAN',
+    ADMIN: 'ADMIN',
+  }
 };
 
 export const locationData = {

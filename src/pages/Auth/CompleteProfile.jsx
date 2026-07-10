@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, MapPin, Home, Hash, ShieldCheck, CheckCircle } from 'lucide-react';
-import { useAuth } from '../../components/context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/api';
 
 const CompleteProfile = () => {
@@ -212,7 +212,7 @@ const CompleteProfile = () => {
       setSuccessMessage('Profile saved successfully!');
 
       setTimeout(() => {
-        navigate('/');
+        navigate('/', { replace: true });
       }, 1500);
     } catch (err) {
       if (err.response?.status === 400) {
