@@ -1,10 +1,10 @@
 export const SIDEBAR_CONFIG = {
   USER: [
-    { label: 'Overview', path: '/dashboard/user', icon: 'Home' },
+    { label: 'Home', path: '/dashboard/user', icon: 'Home' },
     { label: 'My Listings', path: '/dashboard/user/listings', icon: 'Car' },
-    { label: 'Favorites', path: '/dashboard/user/favorites', icon: 'Heart' },
-    { label: 'Messages', path: '/dashboard/user/messages', icon: 'MessageCircle' },
-    { label: 'Settings', path: '/dashboard/user/settings', icon: 'Settings' },
+    // { label: 'Favorites', path: '/dashboard/user/favorites', icon: 'Heart' },
+    // { label: 'Messages', path: '/dashboard/user/messages', icon: 'MessageCircle' },
+    // { label: 'Settings', path: '/dashboard/user/settings', icon: 'Settings' },
   ],
   MIDDLEMAN: [
     { label: 'Dashboard', path: '/dashboard/middleman', icon: 'LayoutDashboard' },

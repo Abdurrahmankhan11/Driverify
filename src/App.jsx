@@ -9,6 +9,7 @@ import RoleRoute from './routes/RoleRoute';
 import { AuthProvider } from './context/AuthContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import UserDashboard from './pages/Dashboards/UserDashboard';
+import UserListings from './pages/Dashboards/UserListings';
 import MiddlemanDashboard from './pages/Dashboards/MiddlemanDashboard';
 import AdminDashboard from './pages/Dashboards/AdminDashboard';
 function App() {
@@ -35,6 +36,14 @@ function App() {
               element={
                 <RoleRoute allowedRoles={['USER']}>
                   <UserDashboard />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="user/listings"
+              element={
+                <RoleRoute allowedRoles={['USER']}>
+                  <UserListings />
                 </RoleRoute>
               }
             />
