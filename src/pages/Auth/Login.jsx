@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Phone, Mail, ArrowRight, ShieldCheck, ChevronLeft } from 'lucide-react';
 import { authService } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { isAuthenticated, user, isLoading } = useAuth();
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('expired') === 'true') {
@@ -19,6 +22,13 @@ const Login = () => {
       navigate('/login', { replace: true });
     }
   }, [location, navigate]);
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      const role = user.role || 'USER';
+      navigate(`/dashboard/${role.toLowerCase()}`, { replace: true });
+    }
+  }, [isAuthenticated, user, isLoading, navigate]);
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, ''); // Only digits
