@@ -22,7 +22,9 @@ const ProtectedRoute = ({ children }) => {
   }
 
   // If user has not completed profile, redirect them to /complete-profile
-  if (!user?.profile_complete && location.pathname !== '/complete-profile') {
+  // But allow dashboard profile pages so user can edit from there too
+  const profileAllowedPaths = ['/complete-profile', '/dashboard/user/profile', '/dashboard/user/profile/edit'];
+  if (!user?.profile_complete && !profileAllowedPaths.includes(location.pathname)) {
     return <Navigate to="/complete-profile" replace />;
   }
 

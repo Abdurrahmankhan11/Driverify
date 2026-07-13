@@ -8,10 +8,12 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import RoleRoute from './routes/RoleRoute';
 import { AuthProvider } from './context/AuthContext';
 import DashboardLayout from './components/layout/DashboardLayout';
-import UserDashboard from './pages/Dashboards/UserDashboard';
-import UserListings from './pages/Dashboards/UserListings';
-import MiddlemanDashboard from './pages/Dashboards/MiddlemanDashboard';
-import AdminDashboard from './pages/Dashboards/AdminDashboard';
+import UserDashboard from './pages/Dashboards/UserDashboard.jsx';
+import UserListings from './pages/Dashboards/UserListings.jsx';
+import ProfileView from './pages/Dashboards/ProfileView.jsx';
+import UpdateProfile from './pages/Dashboards/UpdateProfile.jsx';
+import MiddlemanDashboard from './pages/Dashboards/MiddlemanDashboard.jsx';
+import AdminDashboard from './pages/Dashboards/AdminDashboard.jsx';
 function App() {
   return (
     <AuthProvider>
@@ -51,7 +53,15 @@ function App() {
               path="user/profile"
               element={
                 <RoleRoute allowedRoles={['USER']}>
-                  <CompleteProfile />
+                  <ProfileView />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="user/profile/edit"
+              element={
+                <RoleRoute allowedRoles={['USER']}>
+                  <UpdateProfile />
                 </RoleRoute>
               }
             />
