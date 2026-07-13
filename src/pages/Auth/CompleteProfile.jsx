@@ -298,7 +298,7 @@ const CompleteProfile = () => {
                 Account Information
               </h3>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-1">
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                     Verified Channel
@@ -308,14 +308,14 @@ const CompleteProfile = () => {
                   </div>
                 </div>
 
-                <div>
+                {/* <div>
                   <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                     User Role
                   </label>
                   <div className="px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-semibold">
                     {user?.role || 'BUYER'}
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 

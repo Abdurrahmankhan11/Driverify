@@ -12,6 +12,8 @@ import UserDashboard from './pages/Dashboards/UserDashboard';
 import UserListings from './pages/Dashboards/UserListings';
 import MiddlemanDashboard from './pages/Dashboards/MiddlemanDashboard';
 import AdminDashboard from './pages/Dashboards/AdminDashboard';
+import PostVehicleFlow from './pages/Dashboards/PostVehicle/PostVehicleFlow';
+
 function App() {
   return (
     <AuthProvider>
@@ -44,6 +46,14 @@ function App() {
               element={
                 <RoleRoute allowedRoles={['USER']}>
                   <UserListings />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="user/post-vehicle"
+              element={
+                <RoleRoute allowedRoles={['USER']}>
+                  <PostVehicleFlow />
                 </RoleRoute>
               }
             />
