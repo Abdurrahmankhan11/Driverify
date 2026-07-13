@@ -7,7 +7,7 @@ import * as Icons from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
 
-const AppSidebar = () => {
+const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -20,8 +20,9 @@ const AppSidebar = () => {
   return (
     <aside
       className={cn(
-        "h-screen sticky top-0 left-0 bg-[#FAFAF9] border-r border-[#E7E5E4] flex flex-col transition-all duration-300 z-40",
-        collapsed ? "w-20" : "w-64"
+        "h-screen fixed lg:sticky top-0 left-0 bg-[#FAFAF9] border-r border-[#E7E5E4] flex flex-col transition-all duration-300 z-40",
+        collapsed ? "lg:w-20" : "lg:w-64",
+        mobileMenuOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0"
       )}
     >
       {/* Sidebar Header */}
@@ -34,10 +35,17 @@ const AppSidebar = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={toggleSidebar}
-          className={cn("text-[#57534E] hover:text-[#b70a10] hover:bg-[#F5F5F4]", collapsed && "mx-auto")}
+          onClick={() => {
+            if (window.innerWidth < 1024) {
+              setMobileMenuOpen(false);
+            } else {
+              toggleSidebar();
+            }
+          }}
+          className={cn("text-[#57534E] hover:text-[#b70a10] hover:bg-[#F5F5F4]", collapsed && "hidden lg:flex mx-auto")}
         >
-          {collapsed ? <Icons.Menu className="h-5 w-5" /> : <Icons.ChevronLeft className="h-5 w-5" />}
+          <Icons.X className="h-5 w-5 lg:hidden" />
+          {collapsed ? <Icons.Menu className="h-5 w-5 hidden lg:block" /> : <Icons.ChevronLeft className="h-5 w-5 hidden lg:block" />}
         </Button>
       </div>
 
