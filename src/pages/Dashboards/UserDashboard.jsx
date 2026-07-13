@@ -9,13 +9,7 @@ const UserDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* <div>
-        <h1 className="text-2xl font-bold text-[#292524]">Welcome back, {user?.full_name || 'User'}!</h1>
-        <p className="text-[#57534E]">Manage your vehicle listings and view your activity.</p>
-      </div> */}
 
-      
-      
       <div className="mt-8">
         <FeaturedVehicles />
       </div>

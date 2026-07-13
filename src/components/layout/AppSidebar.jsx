@@ -20,29 +20,23 @@ const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
   return (
     <aside
       className={cn(
-        "h-screen fixed lg:sticky top-0 left-0 bg-[#FAFAF9] border-r border-[#E7E5E4] flex flex-col transition-all duration-300 z-40",
-        collapsed ? "lg:w-20" : "lg:w-64",
-        mobileMenuOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0"
+        "h-screen sticky top-0 left-0 bg-background border-r border-border flex flex-col transition-all duration-300 z-40",
+        collapsed ? "w-20" : "w-64"
       )}
     >
       {/* Sidebar Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-[#E7E5E4]">
-        {!collapsed && (
-          <span className="text-xl font-bold text-[#b70a10] truncate">
-            SecondRide
-          </span>
-        )}
+      <div className="h-16 flex items-center justify-between px-4 border-b border-border">
+       {!collapsed && (
+  <span className="text-xl font-bold truncate">
+    <span className="text-foreground">Second</span>
+    <span className="text-primary">Ride</span>
+  </span>
+)}
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => {
-            if (window.innerWidth < 1024) {
-              setMobileMenuOpen(false);
-            } else {
-              toggleSidebar();
-            }
-          }}
-          className={cn("text-[#57534E] hover:text-[#b70a10] hover:bg-[#F5F5F4]", collapsed && "hidden lg:flex mx-auto")}
+          onClick={toggleSidebar}
+          className={cn("text-muted-foreground hover:text-primary hover:bg-muted", collapsed && "mx-auto")}
         >
           <Icons.X className="h-5 w-5 lg:hidden" />
           {collapsed ? <Icons.Menu className="h-5 w-5 hidden lg:block" /> : <Icons.ChevronLeft className="h-5 w-5 hidden lg:block" />}
@@ -62,8 +56,8 @@ const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
                 cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group relative",
                   isActive
-                    ? "bg-[#b70a10] text-white"
-                    : "text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#292524]"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )
               }
               title={collapsed ? item.label : undefined}
@@ -81,19 +75,19 @@ const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
       </nav>
 
       {/* User Profile Footer */}
-      <div className="p-4 border-t border-[#E7E5E4]">
+      <div className="p-4 border-t border-border">
         <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
-          <div className="w-10 h-10 rounded-full bg-[#E7E5E4] flex items-center justify-center flex-shrink-0 overflow-hidden">
-            <span className="text-sm font-bold text-[#57534E]">
+          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <span className="text-sm font-bold text-muted-foreground">
               {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
             </span>
           </div>
           {!collapsed && (
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-medium text-[#292524] truncate">
+              <span className="text-sm font-medium text-foreground truncate">
                 {user?.full_name || 'User'}
               </span>
-              <span className="text-xs text-[#78716C] truncate">
+              <span className="text-xs text-muted-foreground truncate">
                 {user?.email || user?.phone || role}
               </span>
             </div>
@@ -103,7 +97,7 @@ const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
         <Button 
           variant="outline" 
           className={cn(
-            "w-full mt-4 border-[#E7E5E4] text-[#57534E] hover:text-[#b70a10] hover:bg-[#F5F5F4]",
+            "w-full mt-4 border-border text-muted-foreground hover:text-primary hover:bg-muted",
             collapsed && "px-0"
           )}
           onClick={logout}

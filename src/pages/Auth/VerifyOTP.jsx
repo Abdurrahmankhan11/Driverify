@@ -188,14 +188,14 @@ const VerifyOTP = () => {
   if (!identifier) return null;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
 
       {/* Top Bar */}
       <div className="w-full py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <button
             onClick={() => navigate('/login')}
-            className="inline-flex items-center gap-1.5 text-[#57534E] hover:text-[#18181B] font-medium transition-colors text-sm group"
+            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground font-medium transition-colors text-sm group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1"
           >
             <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
             Back to Login
@@ -209,24 +209,24 @@ const VerifyOTP = () => {
 
           {/* Logo */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold tracking-tight text-[#18181B] mb-2">
-              Second<span className="text-[#b70a10]">Ride</span>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+              Second<span className="text-primary">Ride</span>
             </h1>
-            <p className="text-[#57534E] text-sm">
+            <p className="text-muted-foreground text-sm">
               One step away from your account
             </p>
           </div>
 
           {/* OTP Card */}
-          <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-7 sm:p-8">
+          <div className="bg-card rounded-2xl border border-border shadow-sm p-7 sm:p-8">
 
             <div className="mb-6">
-              <h2 className="text-xl font-bold text-[#18181B] mb-1">
+              <h2 className="text-xl font-bold text-foreground mb-1">
                 Verify OTP
               </h2>
-              <p className="text-sm text-[#57534E] leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 We've sent a 6-digit code to{' '}
-                <span className="font-semibold text-[#18181B]">
+                <span className="font-semibold text-foreground">
                   {maskIdentifier(identifier, channel)}
                 </span>
               </p>
@@ -259,7 +259,7 @@ const VerifyOTP = () => {
 
               {/* OTP Inputs */}
               <div>
-                <label className="block text-sm font-medium text-[#18181B] mb-3">
+                <label className="block text-sm font-medium text-foreground mb-3">
                   Enter 6-Digit OTP
                 </label>
                 <div className="flex items-center justify-between gap-2.5">
@@ -278,19 +278,19 @@ const VerifyOTP = () => {
                       autoFocus={index === 0}
                       disabled={isLockedOut}
                       className={`w-full aspect-square text-center text-xl font-bold rounded-xl border-2 transition-all duration-200 focus:outline-none ${error
-                          ? 'border-red-400 bg-red-50/50 text-red-600'
+                          ? 'border-destructive bg-destructive/10 text-destructive'
                           : digit
-                            ? 'border-[#18181B] bg-[#F5F5F4] text-[#18181B]'
-                            : 'border-[#E7E5E4] bg-white text-[#18181B] focus:border-[#b70a10] focus:ring-2 focus:ring-[#b70a10]/10'
-                        } ${isLockedOut ? 'opacity-50 cursor-not-allowed bg-[#F5F5F4]' : ''}`}
+                            ? 'border-foreground bg-muted text-foreground'
+                            : 'border-border bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20'
+                        } ${isLockedOut ? 'opacity-50 cursor-not-allowed bg-muted' : ''}`}
                     />
                   ))}
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                  <p className="mt-3 text-sm text-red-600 flex items-center gap-1.5 animate-[fadeIn_0.2s_ease-out]">
-                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                  <p className="mt-3 text-sm text-destructive flex items-center gap-1.5 animate-[fadeIn_0.2s_ease-out]">
+                    <span className="w-1 h-1 bg-destructive rounded-full"></span>
                     {error}
                   </p>
                 )}
@@ -298,7 +298,7 @@ const VerifyOTP = () => {
 
               {/* Resend Timer */}
               <div className="flex items-center justify-between">
-                <span className="text-sm text-[#78716C]">
+                <span className="text-sm text-muted-foreground">
                   Didn't receive the code?
                 </span>
                 {canResend ? (
@@ -306,14 +306,14 @@ const VerifyOTP = () => {
                     type="button"
                     onClick={handleResend}
                     disabled={isResending || isLockedOut}
-                    className={`inline-flex items-center gap-1.5 text-sm font-semibold text-[#b70a10] hover:text-[#A66548] transition-colors ${isResending || isLockedOut ? 'opacity-50 cursor-not-allowed' : ''
+                    className={`inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm px-1 ${isResending || isLockedOut ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                   >
                     <RotateCcw size={14} className={isResending ? 'animate-spin' : ''} />
                     {isResending ? 'Resending...' : 'Resend OTP'}
                   </button>
                 ) : (
-                  <span className="text-sm font-medium text-[#57534E] tabular-nums">
+                  <span className="text-sm font-medium text-muted-foreground tabular-nums">
                     Resend in {formatTimer(timer)}
                   </span>
                 )}
@@ -323,9 +323,9 @@ const VerifyOTP = () => {
               <button
                 type="submit"
                 disabled={isVerifying || isLockedOut}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm ${isVerifying || isLockedOut
-                    ? 'bg-[#57534E] text-white/70 cursor-not-allowed'
-                    : 'bg-[#18181B] hover:bg-[#27272A] text-white active:scale-[0.98]'
+                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${isVerifying || isLockedOut
+                    ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
+                    : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
                   }`}
               >
                 {isVerifying ? (
@@ -344,7 +344,7 @@ const VerifyOTP = () => {
               <button
                 onClick={() => navigate('/login')}
                 disabled={isVerifying}
-                className="text-sm text-[#b70a10] font-medium hover:text-[#A66548] hover:underline transition-colors disabled:opacity-50"
+                className="text-sm text-primary font-medium hover:text-primary/80 hover:underline transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm px-1"
               >
                 Edit details
               </button>
@@ -352,8 +352,8 @@ const VerifyOTP = () => {
           </div>
 
           {/* Trust Badge */}
-          <div className="flex items-center justify-center gap-1.5 mt-8 text-xs text-[#57534E]">
-            <ShieldCheck size={14} className="text-[#b70a10]" />
+          <div className="flex items-center justify-center gap-1.5 mt-8 text-xs text-muted-foreground">
+            <ShieldCheck size={14} className="text-primary" />
             <span>Your data is encrypted and secure</span>
           </div>
 

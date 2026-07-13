@@ -1,8 +1,8 @@
 export const SIDEBAR_CONFIG = {
   USER: [
     { label: 'Home', path: '/dashboard/user', icon: 'Home' },
+    { label: 'Profile', path: '/dashboard/user/profile', icon: 'User' },
     { label: 'My Listings', path: '/dashboard/user/listings', icon: 'Car' },
-    // { label: 'Favorites', path: '/dashboard/user/favorites', icon: 'Heart' },
     // { label: 'Messages', path: '/dashboard/user/messages', icon: 'MessageCircle' },
     // { label: 'Settings', path: '/dashboard/user/settings', icon: 'Settings' },
   ],

@@ -98,19 +98,19 @@ const FeaturedVehicles = () => {
   };
 
   return (
-    <section id="featured-vehicles" className="py-16 bg-white scroll-mt-28">
+    <section id="featured-vehicles" className="py-16 bg-background scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 border-b border-[#E7E5E4] pb-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 border-b border-border pb-6">
           <div className="max-w-2xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#18181B] mb-2 tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 tracking-tight">
               Featured Owner-Listed Vehicles
             </h2>
-            <p className="text-[#57534E]">
+            <p className="text-muted-foreground">
               Browse cars and bikes posted directly by vehicle owners.
             </p>
           </div>
-          <button onClick={handleViewAll} className="flex items-center gap-2 text-[#b70a10] font-medium hover:text-[#A66548] transition-colors group pb-1">
+          <button onClick={handleViewAll} className="flex items-center gap-2 text-primary font-medium hover:text-primary/80 transition-colors group pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm px-1">
             View All Vehicles 
             <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
           </button>

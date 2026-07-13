@@ -91,14 +91,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
 
       {/* Top Bar */}
       <div className="w-full py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-1.5 text-[#57534E] hover:text-[#18181B] font-medium transition-colors text-sm group"
+            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground font-medium transition-colors text-sm group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1"
           >
             <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
             Back to Home
@@ -112,35 +112,35 @@ const Login = () => {
 
           {/* Logo */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold tracking-tight text-[#18181B] mb-2">
-              Second<span className="text-[#b70a10]">Ride</span>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
+              Second<span className="text-primary">Ride</span>
             </h1>
-            <p className="text-[#57534E] text-sm">
+            <p className="text-muted-foreground text-sm">
               Sign in to buy & sell vehicles directly with owners
             </p>
           </div>
 
           {/* Login Card */}
-          <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-7 sm:p-8">
+          <div className="bg-card rounded-2xl border border-border shadow-sm p-7 sm:p-8">
 
             <div className="mb-6">
-              <h2 className="text-xl font-bold text-[#18181B] mb-1">
+              <h2 className="text-xl font-bold text-foreground mb-1">
                 Welcome back
               </h2>
-              <p className="text-sm text-[#57534E]">
+              <p className="text-sm text-muted-foreground">
                 Enter your details to request a secure OTP
               </p>
             </div>
 
             {/* Toggle Channel tabs */}
-            <div className="flex bg-[#F5F5F4] p-1 rounded-xl border border-[#E7E5E4] mb-5">
+            <div className="flex bg-muted p-1 rounded-xl border border-border mb-5">
               <button
                 type="button"
                 onClick={() => { setChannel('PHONE'); setIdentifier(''); setError(''); }}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   channel === 'PHONE'
-                    ? 'bg-white text-[#18181B] shadow-sm'
-                    : 'text-[#57534E] hover:text-[#18181B]'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Phone Number
@@ -148,10 +148,10 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => { setChannel('EMAIL'); setIdentifier(''); setError(''); }}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   channel === 'EMAIL'
-                    ? 'bg-white text-[#18181B] shadow-sm'
-                    : 'text-[#57534E] hover:text-[#18181B]'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Email Address
@@ -162,20 +162,20 @@ const Login = () => {
 
               {/* Identifier Input */}
               <div>
-                <label htmlFor="identifier" className="block text-sm font-medium text-[#18181B] mb-2">
+                <label htmlFor="identifier" className="block text-sm font-medium text-foreground mb-2">
                   {channel === 'PHONE' ? 'Mobile Number' : 'Email Address'}
                 </label>
                 
                 <div className={`flex items-center rounded-xl border ${
                   error
-                    ? 'border-red-400 ring-2 ring-red-100'
-                    : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                } bg-white transition-all duration-200 overflow-hidden`}>
+                    ? 'border-destructive ring-2 ring-destructive/20'
+                    : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                } bg-background transition-all duration-200 overflow-hidden`}>
                   
                   {/* Phone prefix only for phone channel */}
                   {channel === 'PHONE' && (
-                    <div className="flex items-center gap-1.5 pl-4 pr-3 py-3.5 bg-[#F5F5F4] border-r border-[#E7E5E4] select-none">
-                      <span className="text-sm font-semibold text-[#18181B]">+91</span>
+                    <div className="flex items-center gap-1.5 pl-4 pr-3 py-3.5 bg-muted border-r border-border select-none">
+                      <span className="text-sm font-semibold text-foreground">+91</span>
                     </div>
                   )}
 
@@ -187,23 +187,23 @@ const Login = () => {
                     placeholder={channel === 'PHONE' ? 'Enter 10-digit number' : 'yourname@example.com'}
                     value={identifier}
                     onChange={channel === 'PHONE' ? handlePhoneChange : handleEmailChange}
-                    className="flex-1 px-4 py-3.5 text-[#18181B] text-base font-medium placeholder:text-[#A8A29E] placeholder:font-normal focus:outline-none bg-transparent"
+                    className="flex-1 px-4 py-3.5 text-foreground text-base font-medium placeholder:text-muted-foreground placeholder:font-normal focus:outline-none bg-transparent"
                     autoFocus
                   />
 
                   <div className="pr-4">
                     {channel === 'PHONE' ? (
-                      <Phone size={18} className="text-[#A8A29E]" />
+                      <Phone size={18} className="text-muted-foreground" />
                     ) : (
-                      <Mail size={18} className="text-[#A8A29E]" />
+                      <Mail size={18} className="text-muted-foreground" />
                     )}
                   </div>
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center gap-1.5 animate-[fadeIn_0.2s_ease-out]">
-                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                  <p className="mt-2 text-sm text-destructive flex items-center gap-1.5 animate-[fadeIn_0.2s_ease-out]">
+                    <span className="w-1 h-1 bg-destructive rounded-full"></span>
                     {error}
                   </p>
                 )}
@@ -213,10 +213,10 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm ${
+                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   isSubmitting
-                    ? 'bg-[#57534E] text-white/70 cursor-not-allowed'
-                    : 'bg-[#18181B] hover:bg-[#27272A] text-white active:scale-[0.98]'
+                    ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
+                    : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
                 }`}
               >
                 {isSubmitting ? (
@@ -234,23 +234,23 @@ const Login = () => {
             </form>
 
             {/* Terms */}
-            <p className="text-xs text-[#78716C] text-center mt-5 leading-relaxed">
+            <p className="text-xs text-muted-foreground text-center mt-5 leading-relaxed">
               By continuing, you agree to our{' '}
-              <span className="text-[#b70a10] font-medium cursor-pointer hover:underline">Terms of Service</span>
+              <span className="text-primary font-medium cursor-pointer hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm" tabIndex={0}>Terms of Service</span>
               {' '}and{' '}
-              <span className="text-[#b70a10] font-medium cursor-pointer hover:underline">Privacy Policy</span>
+              <span className="text-primary font-medium cursor-pointer hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-sm" tabIndex={0}>Privacy Policy</span>
             </p>
           </div>
 
           {/* Trust Badges */}
           <div className="flex items-center justify-center gap-6 mt-8">
-            <div className="flex items-center gap-1.5 text-xs text-[#57534E]">
-              <ShieldCheck size={14} className="text-[#b70a10]" />
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <ShieldCheck size={14} className="text-primary" />
               <span>Secure Login</span>
             </div>
-            <div className="w-1 h-1 bg-[#D6D3D1] rounded-full"></div>
-            <div className="flex items-center gap-1.5 text-xs text-[#57534E]">
-              <ShieldCheck size={14} className="text-[#b70a10]" />
+            <div className="w-1 h-1 bg-border rounded-full"></div>
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <ShieldCheck size={14} className="text-primary" />
               <span>No Spam</span>
             </div>
           </div>

@@ -62,12 +62,12 @@ const UserListings = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#292524]">My Listings</h1>
-          <p className="text-[#57534E]">Manage your listed vehicles here.</p>
+          <h1 className="text-2xl font-bold text-foreground">My Listings</h1>
+          <p className="text-muted-foreground">Manage your listed vehicles here.</p>
         </div>
         <Button 
           onClick={() => setShowForm(!showForm)} 
-          className="bg-primary text-white hover:bg-primary/90"
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
           {showForm ? 'Cancel' : (
             <>
@@ -88,7 +88,7 @@ const UserListings = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#292524]">Listing Title</label>
+                  <label className="text-sm font-medium text-foreground">Listing Title</label>
                   <Input 
                     name="title" 
                     value={formData.title} 
@@ -98,7 +98,7 @@ const UserListings = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#292524]">Brand</label>
+                  <label className="text-sm font-medium text-foreground">Brand</label>
                   <Input 
                     name="brand" 
                     value={formData.brand} 
@@ -108,7 +108,7 @@ const UserListings = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#292524]">Model</label>
+                  <label className="text-sm font-medium text-foreground">Model</label>
                   <Input 
                     name="model" 
                     value={formData.model} 
@@ -118,7 +118,7 @@ const UserListings = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#292524]">Manufacturing Year</label>
+                  <label className="text-sm font-medium text-foreground">Manufacturing Year</label>
                   <Input 
                     name="year" 
                     type="number" 
@@ -129,7 +129,7 @@ const UserListings = () => {
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-sm font-medium text-[#292524]">Expected Price (₹)</label>
+                  <label className="text-sm font-medium text-foreground">Expected Price (₹)</label>
                   <Input 
                     name="price" 
                     type="number" 
@@ -141,7 +141,7 @@ const UserListings = () => {
                 </div>
               </div>
               <div className="pt-4 flex justify-end">
-                <Button type="submit" className="bg-primary text-white hover:bg-primary/90">
+                <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
                   Submit Listing
                 </Button>
               </div>
@@ -153,12 +153,12 @@ const UserListings = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {listings.map((car) => (
           <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div className="h-40 bg-[#E7E5E4] flex items-center justify-center">
-              <Car className="h-16 w-16 text-[#A8A29E]" />
+            <div className="h-40 bg-muted flex items-center justify-center border-b border-border">
+              <Car className="h-16 w-16 text-muted-foreground/50" />
             </div>
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold text-lg text-[#292524] line-clamp-1">{car.title}</h3>
+                <h3 className="font-semibold text-lg text-foreground line-clamp-1">{car.title}</h3>
                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                   car.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
                 }`}>
@@ -166,9 +166,9 @@ const UserListings = () => {
                 </span>
               </div>
               <div className="space-y-1 mb-4">
-                <p className="text-sm text-[#57534E]">Brand: {car.brand}</p>
-                <p className="text-sm text-[#57534E]">Model: {car.model}</p>
-                <p className="text-sm text-[#57534E]">Year: {car.year}</p>
+                <p className="text-sm text-muted-foreground">Brand: {car.brand}</p>
+                <p className="text-sm text-muted-foreground">Model: {car.model}</p>
+                <p className="text-sm text-muted-foreground">Year: {car.year}</p>
               </div>
               <div className="flex items-center text-lg font-bold text-primary">
                 <IndianRupee className="h-5 w-5 mr-1" />
@@ -179,10 +179,10 @@ const UserListings = () => {
         ))}
         
         {listings.length === 0 && (
-          <div className="col-span-full py-12 text-center border-2 border-dashed border-[#D6D3D1] rounded-lg">
-            <Car className="h-12 w-12 text-[#A8A29E] mx-auto mb-3" />
-            <h3 className="text-lg font-medium text-[#57534E]">No vehicles listed yet</h3>
-            <p className="text-sm text-[#78716C] mt-1 mb-4">You haven't listed any vehicles for sale.</p>
+          <div className="col-span-full py-12 text-center border-2 border-dashed border-border rounded-lg">
+            <Car className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+            <h3 className="text-lg font-medium text-muted-foreground">No vehicles listed yet</h3>
+            <p className="text-sm text-muted-foreground mt-1 mb-4">You haven't listed any vehicles for sale.</p>
             <Button 
               variant="outline" 
               onClick={() => setShowForm(true)}
