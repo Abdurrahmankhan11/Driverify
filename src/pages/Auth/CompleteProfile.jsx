@@ -208,12 +208,11 @@ const CompleteProfile = () => {
 
     try {
       const response = await authService.updateProfile(payload);
-      updateUser(response);
+      // Merge existing user with response to avoid overwriting important fields like `role`
+      updateUser({ ...user, ...response, profile_complete: true });
       setSuccessMessage('Profile saved successfully!');
-
-      setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 1500);
+      // Navigate immediately after updating user to avoid timing/race issues
+      navigate('/dashboard/user/profile', { replace: true });
     } catch (err) {
       if (err.response?.status === 400) {
         const data = err.response.data;

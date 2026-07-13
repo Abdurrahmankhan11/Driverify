@@ -7,7 +7,7 @@ import * as Icons from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/button';
 
-const AppSidebar = () => {
+const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -38,7 +38,8 @@ const AppSidebar = () => {
           onClick={toggleSidebar}
           className={cn("text-muted-foreground hover:text-primary hover:bg-muted", collapsed && "mx-auto")}
         >
-          {collapsed ? <Icons.Menu className="h-5 w-5" /> : <Icons.ChevronLeft className="h-5 w-5" />}
+          <Icons.X className="h-5 w-5 lg:hidden" />
+          {collapsed ? <Icons.Menu className="h-5 w-5 hidden lg:block" /> : <Icons.ChevronLeft className="h-5 w-5 hidden lg:block" />}
         </Button>
       </div>
 
