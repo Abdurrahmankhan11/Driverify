@@ -48,6 +48,14 @@ function App() {
               }
             />
             <Route
+              path="user/profile"
+              element={
+                <RoleRoute allowedRoles={['USER']}>
+                  <CompleteProfile />
+                </RoleRoute>
+              }
+            />
+            <Route
               path="middleman"
               element={
                 <RoleRoute allowedRoles={['MIDDLEMAN']}>

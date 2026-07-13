@@ -243,28 +243,28 @@ const CompleteProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] flex flex-col py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background flex flex-col py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto w-full">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#18181B]">
-              Second<span className="text-[#b70a10]">Ride</span>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              Second<span className="text-primary">Ride</span>
             </h1>
-            <p className="text-[#57534E] text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-1">
               {!user?.profile_complete
                 ? 'Complete your profile to get started'
                 : 'View or update your profile details'}
             </p>
           </div>
 
-          <button
+          {/* <button
             type="button"
             onClick={logout}
-            className="text-sm font-semibold text-[#57534E] hover:text-[#b70a10] border border-[#E7E5E4] rounded-lg px-4 py-2 hover:bg-[#F5F5F4] transition-colors"
+            className="text-sm font-semibold text-muted-foreground hover:text-primary border border-border rounded-lg px-4 py-2 hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             Logout
-          </button>
+          </button> */}
         </div>
 
         {/* Success Banner */}
@@ -290,29 +290,29 @@ const CompleteProfile = () => {
         )}
 
         {/* Profile Card */}
-        <div className="bg-white rounded-2xl border border-[#E7E5E4] shadow-sm p-7 sm:p-10">
+        <div className="bg-card rounded-2xl border border-border shadow-sm p-7 sm:p-10">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Account Metadata */}
-            <div className="border-b border-[#E7E5E4] pb-6">
-              <h3 className="text-lg font-bold text-[#18181B] mb-4">
+            <div className="border-b border-border pb-6">
+              <h3 className="text-lg font-bold text-foreground mb-4">
                 Account Information
               </h3>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-semibold text-[#78716C] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                     Verified Channel
                   </label>
-                  <div className="px-4 py-3 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-[#57534E] text-sm font-medium">
+                  <div className="px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-medium">
                     {user?.phone ? `Phone: +91 ${user.phone}` : `Email: ${user?.email}`}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#78716C] uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                     User Role
                   </label>
-                  <div className="px-4 py-3 bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl text-[#57534E] text-sm font-semibold">
+                  <div className="px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-semibold">
                     {user?.role || 'BUYER'}
                   </div>
                 </div>
@@ -321,7 +321,7 @@ const CompleteProfile = () => {
 
             {/* Profile Fields */}
             <div className="space-y-5">
-              <h3 className="text-lg font-bold text-[#18181B] mb-2">
+              <h3 className="text-lg font-bold text-foreground mb-2">
                 Personal Details
               </h3>
 
@@ -329,7 +329,7 @@ const CompleteProfile = () => {
               <div>
                 <label
                   htmlFor="full_name"
-                  className="block text-sm font-medium text-[#18181B] mb-2"
+                  className="block text-sm font-medium text-foreground mb-2"
                 >
                   Full Name
                 </label>
@@ -337,11 +337,11 @@ const CompleteProfile = () => {
                 <div
                   className={`flex items-center rounded-xl border ${
                     errors.full_name
-                      ? 'border-red-400 ring-2 ring-red-100'
-                      : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                  } bg-white transition-all duration-200 overflow-hidden`}
+                      ? 'border-destructive ring-2 ring-destructive/20'
+                      : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                  } bg-background transition-all duration-200 overflow-hidden`}
                 >
-                  <div className="pl-4 pr-1 text-[#A8A29E]">
+                  <div className="pl-4 pr-1 text-muted-foreground">
                     <User size={18} />
                   </div>
 
@@ -352,7 +352,7 @@ const CompleteProfile = () => {
                     placeholder="Enter your full name"
                     value={formData.full_name}
                     onChange={handleChange}
-                    className="w-full px-3 py-3.5 text-[#18181B] text-sm font-medium placeholder:text-[#A8A29E] placeholder:font-normal focus:outline-none bg-transparent"
+                    className="w-full px-3 py-3.5 text-foreground text-sm font-medium placeholder:text-muted-foreground placeholder:font-normal focus:outline-none bg-transparent"
                   />
                 </div>
 
@@ -368,7 +368,7 @@ const CompleteProfile = () => {
                 <div>
                   <label
                     htmlFor="country"
-                    className="block text-sm font-medium text-[#18181B] mb-2"
+                    className="block text-sm font-medium text-foreground mb-2"
                   >
                     Country
                   </label>
@@ -376,16 +376,16 @@ const CompleteProfile = () => {
                   <div
                     className={`relative rounded-xl border ${
                       errors.country
-                        ? 'border-red-400 ring-2 ring-red-100'
-                        : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                    } bg-white transition-all duration-200 overflow-hidden`}
+                        ? 'border-destructive ring-2 ring-destructive/20'
+                        : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                    } bg-background transition-all duration-200 overflow-hidden`}
                   >
                     <select
                       id="country"
                       name="country"
                       value={formData.country}
                       onChange={handleCountryChange}
-                      className="w-full px-4 py-3.5 text-[#18181B] text-sm font-medium focus:outline-none bg-transparent appearance-none cursor-pointer"
+                      className="w-full px-4 py-3.5 text-foreground text-sm font-medium focus:outline-none bg-transparent appearance-none cursor-pointer"
                     >
                       <option value="">Select Country</option>
                       {countriesList.map((c) => (
@@ -395,7 +395,7 @@ const CompleteProfile = () => {
                       ))}
                     </select>
 
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#A8A29E]">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                       <MapPin size={16} />
                     </div>
                   </div>
@@ -410,7 +410,7 @@ const CompleteProfile = () => {
                 <div>
                   <label
                     htmlFor="state"
-                    className="block text-sm font-medium text-[#18181B] mb-2"
+                    className="block text-sm font-medium text-foreground mb-2"
                   >
                     State
                   </label>
@@ -418,9 +418,9 @@ const CompleteProfile = () => {
                   <div
                     className={`relative rounded-xl border ${
                       errors.state
-                        ? 'border-red-400 ring-2 ring-red-100'
-                        : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                    } bg-white transition-all duration-200 overflow-hidden`}
+                        ? 'border-destructive ring-2 ring-destructive/20'
+                        : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                    } bg-background transition-all duration-200 overflow-hidden`}
                   >
                     <select
                       id="state"
@@ -428,7 +428,7 @@ const CompleteProfile = () => {
                       value={formData.state}
                       onChange={handleStateChange}
                       disabled={!formData.country}
-                      className="w-full px-4 py-3.5 text-[#18181B] text-sm font-medium focus:outline-none bg-transparent appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full px-4 py-3.5 text-foreground text-sm font-medium focus:outline-none bg-transparent appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <option value="">Select State</option>
                       {statesList.map((s) => (
@@ -438,7 +438,7 @@ const CompleteProfile = () => {
                       ))}
                     </select>
 
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#A8A29E]">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                       <MapPin size={16} />
                     </div>
                   </div>
@@ -456,7 +456,7 @@ const CompleteProfile = () => {
                 <div>
                   <label
                     htmlFor="city"
-                    className="block text-sm font-medium text-[#18181B] mb-2"
+                    className="block text-sm font-medium text-foreground mb-2"
                   >
                     City
                   </label>
@@ -464,9 +464,9 @@ const CompleteProfile = () => {
                   <div
                     className={`relative rounded-xl border ${
                       errors.city
-                        ? 'border-red-400 ring-2 ring-red-100'
-                        : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                    } bg-white transition-all duration-200 overflow-hidden`}
+                        ? 'border-destructive ring-2 ring-destructive/20'
+                        : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                    } bg-background transition-all duration-200 overflow-hidden`}
                   >
                     <select
                       id="city"
@@ -474,7 +474,7 @@ const CompleteProfile = () => {
                       value={formData.city}
                       onChange={handleChange}
                       disabled={!formData.state}
-                      className="w-full px-4 py-3.5 text-[#18181B] text-sm font-medium focus:outline-none bg-transparent appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full px-4 py-3.5 text-foreground text-sm font-medium focus:outline-none bg-transparent appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <option value="">Select City</option>
                       {citiesList.map((c) => (
@@ -484,7 +484,7 @@ const CompleteProfile = () => {
                       ))}
                     </select>
 
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#A8A29E]">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                       <MapPin size={16} />
                     </div>
                   </div>
@@ -499,7 +499,7 @@ const CompleteProfile = () => {
                 <div>
                   <label
                     htmlFor="pincode"
-                    className="block text-sm font-medium text-[#18181B] mb-2"
+                    className="block text-sm font-medium text-foreground mb-2"
                   >
                     Pincode
                   </label>
@@ -507,11 +507,11 @@ const CompleteProfile = () => {
                   <div
                     className={`flex items-center rounded-xl border ${
                       errors.pincode
-                        ? 'border-red-400 ring-2 ring-red-100'
-                        : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                    } bg-white transition-all duration-200 overflow-hidden`}
+                        ? 'border-destructive ring-2 ring-destructive/20'
+                        : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                    } bg-background transition-all duration-200 overflow-hidden`}
                   >
-                    <div className="pl-4 pr-1 text-[#A8A29E]">
+                    <div className="pl-4 pr-1 text-muted-foreground">
                       <Hash size={18} />
                     </div>
 
@@ -523,7 +523,7 @@ const CompleteProfile = () => {
                       placeholder="6-digit pincode"
                       value={formData.pincode}
                       onChange={handleChange}
-                      className="w-full px-3 py-3.5 text-[#18181B] text-sm font-medium placeholder:text-[#A8A29E] placeholder:font-normal focus:outline-none bg-transparent"
+                      className="w-full px-3 py-3.5 text-foreground text-sm font-medium placeholder:text-muted-foreground placeholder:font-normal focus:outline-none bg-transparent"
                     />
                   </div>
 
@@ -539,7 +539,7 @@ const CompleteProfile = () => {
               <div>
                 <label
                   htmlFor="address"
-                  className="block text-sm font-medium text-[#18181B] mb-2"
+                  className="block text-sm font-medium text-foreground mb-2"
                 >
                   Street Address
                 </label>
@@ -547,11 +547,11 @@ const CompleteProfile = () => {
                 <div
                   className={`flex rounded-xl border ${
                     errors.address
-                      ? 'border-red-400 ring-2 ring-red-100'
-                      : 'border-[#E7E5E4] focus-within:border-[#b70a10] focus-within:ring-2 focus-within:ring-[#b70a10]/10'
-                  } bg-white transition-all duration-200 overflow-hidden`}
+                      ? 'border-destructive ring-2 ring-destructive/20'
+                      : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                  } bg-background transition-all duration-200 overflow-hidden`}
                 >
-                  <div className="pl-4 pr-1 pt-3.5 text-[#A8A29E] self-start">
+                  <div className="pl-4 pr-1 pt-3.5 text-muted-foreground self-start">
                     <Home size={18} />
                   </div>
 
@@ -562,7 +562,7 @@ const CompleteProfile = () => {
                     placeholder="Enter your house no, street address, locality..."
                     value={formData.address}
                     onChange={handleChange}
-                    className="w-full px-3 py-3.5 text-[#18181B] text-sm font-medium placeholder:text-[#A8A29E] placeholder:font-normal focus:outline-none bg-transparent resize-none"
+                    className="w-full px-3 py-3.5 text-foreground text-sm font-medium placeholder:text-muted-foreground placeholder:font-normal focus:outline-none bg-transparent resize-none"
                   />
                 </div>
 
@@ -575,11 +575,11 @@ const CompleteProfile = () => {
             </div>
 
             {/* Actions */}
-            <div className="pt-6 border-t border-[#E7E5E4] flex flex-col sm:flex-row gap-4 justify-between items-center">
+            <div className="pt-6 border-t border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="w-full sm:w-auto px-6 py-3 border border-[#E7E5E4] rounded-xl text-sm font-semibold text-[#57534E] hover:bg-[#F5F5F4] hover:text-[#18181B] transition-colors order-2 sm:order-1 text-center"
+                className="w-full sm:w-auto px-6 py-3 border border-border rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors order-2 sm:order-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 Cancel
               </button>
@@ -587,10 +587,10 @@ const CompleteProfile = () => {
               <button
                 type="submit"
                 disabled={isSaving}
-                className={`w-full sm:w-auto px-8 py-3 rounded-xl text-sm font-semibold text-white shadow-sm transition-all duration-200 flex items-center justify-center gap-2 order-1 sm:order-2 ${
+                className={`w-full sm:w-auto px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   isSaving
-                    ? 'bg-[#57534E] cursor-not-allowed opacity-85'
-                    : 'bg-[#18181B] hover:bg-[#27272A] active:scale-[0.98]'
+                    ? 'bg-muted-foreground text-background/80 cursor-not-allowed shadow-sm'
+                    : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98] shadow-sm'
                 }`}
               >
                 {isSaving ? (
@@ -607,8 +607,8 @@ const CompleteProfile = () => {
         </div>
 
         {/* Security Badge */}
-        <div className="flex items-center justify-center gap-1.5 mt-8 text-xs text-[#57534E]">
-          <ShieldCheck size={14} className="text-[#b70a10]" />
+        <div className="flex items-center justify-center gap-1.5 mt-8 text-xs text-muted-foreground">
+          <ShieldCheck size={14} className="text-primary" />
           <span>All data is securely validated and encrypted</span>
         </div>
       </div>
