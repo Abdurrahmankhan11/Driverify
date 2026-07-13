@@ -9,23 +9,23 @@ const PopularBrands = () => {
   const brands = activeTab === 'cars' ? carBrands : bikeBrands;
 
   return (
-    <section id="popular-brands" className="py-12 bg-[#F5F5F4] scroll-mt-28">
+    <section id="popular-brands" className="py-12 bg-muted scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#18181B] tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
             Explore Popular Brands
           </h2>
           
-          <div className="flex bg-white p-1 rounded-xl border border-[#E7E5E4] shadow-sm">
+          <div className="flex bg-background p-1 rounded-xl border border-border shadow-sm">
             <button 
               onClick={() => setActiveTab('cars')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'cars' ? 'bg-[#18181B] text-white shadow-sm' : 'text-[#57534E] hover:text-[#18181B]'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'cars' ? 'bg-foreground text-background shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Popular Cars
             </button>
             <button 
               onClick={() => setActiveTab('bikes')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'bikes' ? 'bg-[#18181B] text-white shadow-sm' : 'text-[#57534E] hover:text-[#18181B]'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'bikes' ? 'bg-foreground text-background shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Popular Bikes
             </button>
@@ -37,9 +37,9 @@ const PopularBrands = () => {
             <a 
               key={index} 
               href="#" 
-              className="bg-white border border-[#E7E5E4] rounded-xl p-4 flex items-center justify-center text-center hover:border-[#b70a10] hover:shadow-md transition-all group"
+              className="bg-background border border-border rounded-xl p-4 flex items-center justify-center text-center hover:border-primary/50 hover:shadow-md transition-all group"
             >
-              <span className="font-semibold text-[#18181B] group-hover:text-[#b70a10] transition-colors">
+              <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
                 {brand}
               </span>
             </a>
