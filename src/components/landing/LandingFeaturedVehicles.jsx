@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { vehicleService } from '../../services/api';
 
-const FeaturedVehicles = () => {
+const LandingFeaturedVehicles = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [vehicles, setVehicles] = useState([]);
@@ -91,7 +91,7 @@ const FeaturedVehicles = () => {
         ) : vehicles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {vehicles.map(vehicle => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} />
+              <VehicleCard key={vehicle.id} vehicle={vehicle} onViewDetails={() => navigate('/login')} />
             ))}
           </div>
         ) : (
@@ -105,4 +105,4 @@ const FeaturedVehicles = () => {
   );
 };
 
-export default FeaturedVehicles;
+export default LandingFeaturedVehicles;

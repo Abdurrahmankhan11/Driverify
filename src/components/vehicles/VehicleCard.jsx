@@ -2,21 +2,21 @@ import React from 'react';
 import { MapPin, Fuel, Gauge, Settings2, ShieldCheck, Car, Bike, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const VehicleCard = ({ vehicle }) => {
+const VehicleCard = ({ vehicle, onViewDetails }) => {
   const navigate = useNavigate();
   const isCar = vehicle.type === 'Car';
 
   return (
     <div className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
-      
+
       {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img 
-          src={vehicle.image} 
-          alt={`${vehicle.brand} ${vehicle.model}`} 
+        <img
+          src={vehicle.image}
+          alt={`${vehicle.brand} ${vehicle.model}`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        
+
         {/* Top Badges */}
         <div className="absolute top-3 left-3 flex gap-2">
           <div className="bg-background/95 backdrop-blur-sm px-2.5 py-1 rounded-md text-[11px] font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-1 border border-border/50">
@@ -61,7 +61,7 @@ const VehicleCard = ({ vehicle }) => {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/login')} className="flex-1 bg-background hover:bg-muted text-foreground border border-border py-2.5 rounded-lg font-medium transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+          <button onClick={() => onViewDetails ? onViewDetails(vehicle.id) : navigate(`/listings/${vehicle.id}`)} className="flex-1 bg-background hover:bg-muted text-foreground border border-border py-2.5 rounded-lg font-medium transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
             View Details
           </button>
           <button onClick={() => navigate('/login')} className="flex-1 bg-foreground hover:bg-foreground/90 text-background py-2.5 rounded-lg font-medium transition-colors text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
@@ -69,7 +69,7 @@ const VehicleCard = ({ vehicle }) => {
           </button>
         </div>
       </div>
-      
+
     </div>
   );
 };

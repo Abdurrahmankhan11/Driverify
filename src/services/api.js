@@ -181,7 +181,7 @@ export const vehicleService = {
     return res.data;
   },
   getListing: async (id) => {
-    const res = await api.get(`/mp/listings/${id}`);
+    const res = await api.get(`/mp/listings/${id}/`);
     return res.data;
   },
   uploadExteriorImage: async (listingId, formData, onUploadProgress) => {

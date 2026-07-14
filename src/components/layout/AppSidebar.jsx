@@ -47,19 +47,26 @@ const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
       <nav className="flex-1 py-4 flex flex-col gap-1 px-3 overflow-y-auto overflow-x-hidden">
         {navItems.map((item, idx) => {
           const IconComponent = Icons[item.icon] || Icons.Circle;
-
+          
           return (
             <NavLink
               key={idx}
               to={item.path}
-              className={({ isActive }) =>
-                cn(
+              className={({ isActive }) => {
+                const isHomePath = item.path === `/dashboard/${role.toLowerCase()}`;
+                const isVehicleDetails = window.location.pathname.startsWith(`/dashboard/${role.toLowerCase()}/vehicle/`);
+                
+                // If we're on a vehicle details page, Home should be active
+                const shouldBeActive = (isActive && !isHomePath) || 
+                                       (isHomePath && (isActive || isVehicleDetails));
+
+                return cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group relative",
-                  isActive
+                  shouldBeActive
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )
-              }
+                );
+              }}
               title={collapsed ? item.label : undefined}
               end={item.path === `/dashboard/${role.toLowerCase()}`}
             >

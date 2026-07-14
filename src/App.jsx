@@ -15,6 +15,7 @@ import UpdateProfile from './pages/Dashboards/UpdateProfile.jsx';
 import MiddlemanDashboard from './pages/Dashboards/MiddlemanDashboard.jsx';
 import AdminDashboard from './pages/Dashboards/AdminDashboard.jsx';
 import PostVehicleFlow from './pages/Dashboards/PostVehicle/PostVehicleFlow.jsx';
+import VehicleDetails from './pages/VehicleDetails.jsx';
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* Dashboard Routes wrapped with Layout */}
           <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
             <Route
@@ -48,6 +49,14 @@ function App() {
               element={
                 <RoleRoute allowedRoles={['USER']}>
                   <UserListings />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="user/vehicle/:id"
+              element={
+                <RoleRoute allowedRoles={['USER']}>
+                  <VehicleDetails />
                 </RoleRoute>
               }
             />
