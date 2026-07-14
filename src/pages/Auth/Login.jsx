@@ -74,7 +74,7 @@ const Login = () => {
     try {
       const response = await authService.requestOTP(identifier, channel);
       setIsSubmitting(false);
-      
+
       // Success response contains detail, identifier, expires_in_seconds (300)
       navigate('/verify-otp', {
         state: {
@@ -137,22 +137,20 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => { setChannel('PHONE'); setIdentifier(''); setError(''); }}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  channel === 'PHONE'
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channel === 'PHONE'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
-                }`}
+                  }`}
               >
                 Phone Number
               </button>
               <button
                 type="button"
                 onClick={() => { setChannel('EMAIL'); setIdentifier(''); setError(''); }}
-                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  channel === 'EMAIL'
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channel === 'EMAIL'
                     ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
-                }`}
+                  }`}
               >
                 Email Address
               </button>
@@ -165,13 +163,12 @@ const Login = () => {
                 <label htmlFor="identifier" className="block text-sm font-medium text-foreground mb-2">
                   {channel === 'PHONE' ? 'Mobile Number' : 'Email Address'}
                 </label>
-                
-                <div className={`flex items-center rounded-xl border ${
-                  error
+
+                <div className={`flex items-center rounded-xl border ${error
                     ? 'border-destructive ring-2 ring-destructive/20'
                     : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
-                } bg-background transition-all duration-200 overflow-hidden`}>
-                  
+                  } bg-background transition-all duration-200 overflow-hidden`}>
+
                   {/* Phone prefix only for phone channel */}
                   {channel === 'PHONE' && (
                     <div className="flex items-center gap-1.5 pl-4 pr-3 py-3.5 bg-muted border-r border-border select-none">
@@ -213,11 +210,10 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                  isSubmitting
+                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${isSubmitting
                     ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
                     : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
-                }`}
+                  }`}
               >
                 {isSubmitting ? (
                   <>

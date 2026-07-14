@@ -278,10 +278,10 @@ const VerifyOTP = () => {
                       autoFocus={index === 0}
                       disabled={isLockedOut}
                       className={`w-full aspect-square text-center text-xl font-bold rounded-xl border-2 transition-all duration-200 focus:outline-none ${error
-                          ? 'border-destructive bg-destructive/10 text-destructive'
-                          : digit
-                            ? 'border-foreground bg-muted text-foreground'
-                            : 'border-border bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20'
+                        ? 'border-destructive bg-destructive/10 text-destructive'
+                        : digit
+                          ? 'border-foreground bg-muted text-foreground'
+                          : 'border-border bg-background text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20'
                         } ${isLockedOut ? 'opacity-50 cursor-not-allowed bg-muted' : ''}`}
                     />
                   ))}
@@ -324,8 +324,8 @@ const VerifyOTP = () => {
                 type="submit"
                 disabled={isVerifying || isLockedOut}
                 className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${isVerifying || isLockedOut
-                    ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
-                    : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
+                  ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
+                  : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
                   }`}
               >
                 {isVerifying ? (
