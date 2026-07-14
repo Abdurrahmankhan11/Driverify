@@ -18,53 +18,53 @@ const VehicleCard = ({ vehicle, onViewDetails }) => {
         />
 
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 flex gap-2">
-          <div className="bg-background/95 backdrop-blur-sm px-2.5 py-1 rounded-md text-[11px] font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-1 border border-border/50">
-            {isCar ? <Car size={12} /> : <Bike size={12} />} {vehicle.type}
+        <div className="absolute top-2 left-2 flex gap-2">
+          <div className="bg-background/95 backdrop-blur-sm px-2 py-0.5 rounded-md text-[10px] font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-1 border border-border/50">
+            {isCar ? <Car size={10} /> : <Bike size={10} />} {vehicle.type}
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-5 flex-1 flex flex-col">
-        <div className="flex justify-between items-start mb-4">
-          <div className="pr-2">
-            <h3 className="text-lg font-bold text-foreground leading-tight mb-1 group-hover:text-primary transition-colors">
+      <div className="p-4 flex-1 flex flex-col">
+        <div className="flex justify-between items-start mb-3 gap-2">
+          <div className="min-w-0">
+            <h3 className="text-base font-bold text-foreground leading-tight mb-0.5 group-hover:text-primary transition-colors truncate">
               {vehicle.brand} {vehicle.model}
             </h3>
-            <p className="text-sm text-muted-foreground">{vehicle.year}</p>
+            <p className="text-xs text-muted-foreground">{vehicle.year}</p>
           </div>
           <div className="text-right shrink-0">
-            <div className="text-xl font-bold text-primary">{vehicle.price}</div>
+            <div className="text-lg font-bold text-primary">{vehicle.price}</div>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-2 gap-y-3 gap-x-2 py-4 mb-4 border-y border-border mt-auto">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Gauge size={16} className="text-muted-foreground/50" />
-            <span className="font-medium text-foreground">{vehicle.kilometers}</span>
+        <div className="grid grid-cols-2 gap-y-2 gap-x-2 py-3 mb-3 border-y border-border mt-auto">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Gauge size={14} className="text-muted-foreground/50 shrink-0" />
+            <span className="font-medium text-foreground truncate">{vehicle.kilometers}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Fuel size={16} className="text-muted-foreground/50" />
-            <span className="font-medium text-foreground">{vehicle.fuelType}</span>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Fuel size={14} className="text-muted-foreground/50 shrink-0" />
+            <span className="font-medium text-foreground truncate">{vehicle.fuelType}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Settings2 size={16} className="text-muted-foreground/50" />
-            <span className="font-medium text-foreground">{isCar ? vehicle.transmission : vehicle.engineCc}</span>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Settings2 size={14} className="text-muted-foreground/50 shrink-0" />
+            <span className="font-medium text-foreground truncate">{isCar ? vehicle.transmission : vehicle.engineCc}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin size={16} className="text-muted-foreground/50" />
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <MapPin size={14} className="text-muted-foreground/50 shrink-0" />
             <span className="font-medium text-foreground truncate">{vehicle.city}</span>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
-          <button onClick={() => onViewDetails ? onViewDetails(vehicle.id) : navigate(`/listings/${vehicle.id}`)} className="flex-1 bg-background hover:bg-muted text-foreground border border-border py-2.5 rounded-lg font-medium transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+        <div className="flex items-center gap-2 mt-auto">
+          <button onClick={() => onViewDetails ? onViewDetails(vehicle.id) : navigate(`/listings/${vehicle.id}`)} className="flex-1 bg-background hover:bg-muted text-foreground border border-border py-1.5 rounded-lg font-medium transition-colors text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
             View Details
           </button>
-          <button onClick={() => navigate('/login')} className="flex-1 bg-foreground hover:bg-foreground/90 text-background py-2.5 rounded-lg font-medium transition-colors text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+          <button onClick={() => navigate('/login')} className="flex-1 bg-foreground hover:bg-foreground/90 text-background py-1.5 rounded-lg font-medium transition-colors text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
             Contact Owner
           </button>
         </div>

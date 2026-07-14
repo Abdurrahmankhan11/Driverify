@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import VehicleCard from '../vehicles/VehicleCard';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, Search, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { vehicleService } from '../../services/api';
+import { Input } from '../ui/input';
 
 const DashboardFeaturedVehicles = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('All'); // 'All', 'Car', 'Bike'
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -65,43 +68,88 @@ const DashboardFeaturedVehicles = () => {
     }
   };
 
-  return (
-    <section id="featured-vehicles" className="py-16 bg-background scroll-mt-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4 border-b border-border pb-6">
-          <div className="max-w-2xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 tracking-tight">
-              Featured Owner-Listed Vehicles
-            </h2>
-            <p className="text-muted-foreground">
-              Browse cars and bikes posted directly by vehicle owners.
-            </p>
-          </div>
-          <button onClick={handleViewAll} className="flex items-center gap-2 text-primary font-medium hover:text-primary/80 transition-colors group pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm px-1">
-            View All Vehicles 
-            <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+  const filteredVehicles = vehicles.filter((v) => {
+    // Search match
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch = 
+      v.brand.toLowerCase().includes(searchLower) ||
+      v.model.toLowerCase().includes(searchLower) ||
+      v.city.toLowerCase().includes(searchLower);
 
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="animate-spin text-primary" size={32} />
-          </div>
-        ) : vehicles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vehicles.map(vehicle => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} onViewDetails={() => navigate(`/dashboard/user/vehicle/${vehicle.id}`)} />
+    // Type match
+    const matchesType = filterType === 'All' ? true : v.type.toLowerCase() === filterType.toLowerCase();
+
+    return matchesSearch && matchesType;
+  });
+
+  return (
+    <div className="w-full">
+      {/* Top Header & Search/Filter Bar */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-8 gap-6 border-b border-border/60 pb-5">
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
+            Marketplace Highlights
+          </h2>
+          <p className="text-muted-foreground mt-1 text-sm md:text-base">
+            Browse premium pre-owned cars and bikes directly from owners.
+          </p>
+        </div>
+        
+        {/* Search & Filters */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+          {/* Filter Tabs */}
+          <div className="flex bg-muted p-1 rounded-lg w-full sm:w-auto shrink-0">
+            {['All', 'Car', 'Bike'].map(type => (
+              <button
+                key={type}
+                onClick={() => setFilterType(type)}
+                className={`flex-1 sm:flex-none px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
+                  filterType === type 
+                    ? 'bg-background text-foreground shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {type}s
+              </button>
             ))}
           </div>
-        ) : (
-          <div className="text-center py-12 bg-muted/30 rounded-xl border border-border/50">
-            <p className="text-muted-foreground">No vehicles listed currently.</p>
-          </div>
-        )}
 
+          {/* Search Input */}
+          <div className="relative w-full sm:w-64 shrink-0">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-muted-foreground" />
+            </div>
+            <Input
+              type="text"
+              placeholder="Search brand, model, city..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 h-10 w-full bg-background border-border/60 shadow-sm focus-visible:ring-primary/20"
+            />
+          </div>
+        </div>
       </div>
-    </section>
+
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="animate-spin text-primary" size={32} />
+        </div>
+      ) : filteredVehicles.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {filteredVehicles.map(vehicle => (
+            <VehicleCard key={vehicle.id} vehicle={vehicle} onViewDetails={() => navigate(`/dashboard/user/vehicle/${vehicle.id}`)} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center text-center py-24 bg-card rounded-2xl border border-dashed border-border/60 shadow-sm">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+            <Filter className="w-8 h-8 text-muted-foreground/50" />
+          </div>
+          <h3 className="text-lg font-bold text-foreground">No vehicles found</h3>
+          <p className="text-muted-foreground mt-1">Try adjusting your filters or search terms.</p>
+        </div>
+      )}
+    </div>
   );
 };
 
