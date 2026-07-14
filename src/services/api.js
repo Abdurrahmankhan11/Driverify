@@ -216,6 +216,14 @@ export const vehicleService = {
     const res = await api.get('/mp/listings/details');
     return res.data;
   },
+  getMyListings: async () => {
+    const res = await api.get('/mp/my/vehicle-listings/');
+    return res.data;
+  },
+  updateMyListing: async (id, data) => {
+    const res = await api.patch(`/mp/my/vehicle-listings/${id}/update/`, data);
+    return res.data;
+  },
 };
 
 export default api;
