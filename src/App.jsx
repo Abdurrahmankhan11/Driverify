@@ -61,6 +61,14 @@ function App() {
               }
             />
             <Route
+              path="user/listings/:id"
+              element={
+                <RoleRoute allowedRoles={['USER']}>
+                  <VehicleDetails />
+                </RoleRoute>
+              }
+            />
+            <Route
               path="user/post-vehicle"
               element={
                 <RoleRoute allowedRoles={['USER']}>
