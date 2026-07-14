@@ -5,7 +5,7 @@ import HeroSection from '../components/landing/HeroSection';
 import SearchVehicle from '../components/landing/SearchVehicle';
 import VehicleCategories from '../components/landing/VehicleCategories';
 import PopularBrands from '../components/landing/PopularBrands';
-import FeaturedVehicles from '../components/landing/FeaturedVehicles';
+import LandingFeaturedVehicles from '../components/landing/LandingFeaturedVehicles';
 import HowItWorks from '../components/landing/HowItWorks';
 import WhySecondRide from '../components/landing/WhySecondRide';
 import SafetyTips from '../components/landing/SafetyTips';
@@ -34,7 +34,7 @@ const LandingPage = () => {
         {/* <SearchVehicle /> */}
         <VehicleCategories />
         {/* <PopularBrands /> */}
-        <FeaturedVehicles />
+        <LandingFeaturedVehicles />
         <HowItWorks />
         <WhySecondRide />
         <SafetyTips />
