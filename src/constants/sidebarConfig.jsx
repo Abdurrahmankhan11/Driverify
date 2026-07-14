@@ -3,6 +3,7 @@ export const SIDEBAR_CONFIG = {
     { label: 'Home', path: '/dashboard/user', icon: 'Home' },
     { label: 'Profile', path: '/dashboard/user/profile', icon: 'User' },
     { label: 'My Listings', path: '/dashboard/user/listings', icon: 'Car' },
+    { label: 'List Vehicle', path: '/dashboard/user/post-vehicle', icon: 'Plus' },
     // { label: 'Messages', path: '/dashboard/user/messages', icon: 'MessageCircle' },
     // { label: 'Settings', path: '/dashboard/user/settings', icon: 'Settings' },
   ],

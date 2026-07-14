@@ -1,93 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import VehicleCard from '../vehicles/VehicleCard';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-
-const dummyVehicles = [
-  {
-    id: 1,
-    type: 'Car',
-    brand: 'Maruti Suzuki',
-    model: 'Swift VXi',
-    price: '₹5.45 Lakh',
-    city: 'Bhopal',
-    fuelType: 'Petrol',
-    kilometers: '42,000 km',
-    year: '2021',
-    transmission: 'Manual',
-    image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 2,
-    type: 'Car',
-    brand: 'Hyundai',
-    model: 'Creta SX',
-    price: '₹11.80 Lakh',
-    city: 'Indore',
-    fuelType: 'Diesel',
-    kilometers: '58,000 km',
-    year: '2020',
-    transmission: 'Manual',
-    image: 'https://images.unsplash.com/photo-1619682817481-e994891cd1f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 3,
-    type: 'Car',
-    brand: 'Mahindra',
-    model: 'Thar LX',
-    price: '₹14.50 Lakh',
-    city: 'Bhopal',
-    fuelType: 'Diesel',
-    kilometers: '27,000 km',
-    year: '2022',
-    transmission: 'Automatic',
-    image: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 4,
-    type: 'Bike',
-    brand: 'Royal Enfield',
-    model: 'Classic 350',
-    price: '₹1.65 Lakh',
-    city: 'Bhopal',
-    fuelType: 'Petrol',
-    kilometers: '18,000 km',
-    year: '2021',
-    engineCc: '350cc',
-    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 5,
-    type: 'Bike',
-    brand: 'Yamaha',
-    model: 'MT 15',
-    price: '₹1.25 Lakh',
-    city: 'Indore',
-    fuelType: 'Petrol',
-    kilometers: '12,500 km',
-    year: '2022',
-    engineCc: '155cc',
-    image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 6,
-    type: 'Bike',
-    brand: 'TVS',
-    model: 'Apache RTR 160',
-    price: '₹85,000',
-    city: 'Nagpur',
-    fuelType: 'Petrol',
-    kilometers: '22,000 km',
-    year: '2020',
-    engineCc: '160cc',
-    image: 'https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-  }
-];
+import { vehicleService } from '../../services/api';
 
 const FeaturedVehicles = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
+  const [vehicles, setVehicles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const data = await vehicleService.getListingsDetails();
+        
+        const formattedVehicles = data.map((item) => {
+          const frontImage = item.images?.find(img => img.image_type?.toLowerCase() === 'exterior' || img.image_type?.toLowerCase() === 'front');
+          const displayImage = frontImage ? frontImage.image_url : (item.images?.[0]?.image_url || 'https://placehold.co/800x600/e2e8f0/1e293b?text=No+Image');
+
+          const priceValue = parseFloat(item.price);
+          let displayPrice = item.price ? `₹${item.price}` : 'N/A';
+          if (!isNaN(priceValue)) {
+            if (priceValue >= 100000) {
+              displayPrice = `₹${(priceValue / 100000).toFixed(2)} Lakh`;
+            } else {
+              displayPrice = `₹${priceValue.toLocaleString('en-IN')}`;
+            }
+          }
+
+          return {
+            id: item.id,
+            type: item.vehicle_type || 'Car',
+            brand: item.brand || 'Unknown',
+            model: item.model || 'Unknown',
+            price: displayPrice,
+            city: item.location || item.city || 'N/A',
+            fuelType: item.fuel_type || 'N/A',
+            kilometers: item.kilometers_driven ? `${item.kilometers_driven.toLocaleString('en-IN')} km` : (item.kilometers ? `${item.kilometers.toLocaleString('en-IN')} km` : 'N/A'),
+            year: item.year || 'N/A',
+            transmission: item.transmission || 'N/A',
+            engineCc: item.engine_cc || 'N/A',
+            image: displayImage,
+          };
+        });
+
+        setVehicles(formattedVehicles);
+      } catch (error) {
+        console.error('Failed to fetch vehicles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
 
   const handleViewAll = () => {
     if (isAuthenticated && user?.role === 'USER') {
@@ -116,11 +84,21 @@ const FeaturedVehicles = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {dummyVehicles.map(vehicle => (
-            <VehicleCard key={vehicle.id} vehicle={vehicle} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="animate-spin text-primary" size={32} />
+          </div>
+        ) : vehicles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {vehicles.map(vehicle => (
+              <VehicleCard key={vehicle.id} vehicle={vehicle} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-muted/30 rounded-xl border border-border/50">
+            <p className="text-muted-foreground">No vehicles listed currently.</p>
+          </div>
+        )}
 
       </div>
     </section>

@@ -208,12 +208,11 @@ const CompleteProfile = () => {
 
     try {
       const response = await authService.updateProfile(payload);
-      updateUser(response);
+      // Merge existing user with response to avoid overwriting important fields like `role`
+      updateUser({ ...user, ...response, profile_complete: true });
       setSuccessMessage('Profile saved successfully!');
-
-      setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 1500);
+      // Navigate immediately after updating user to avoid timing/race issues
+      navigate('/dashboard/user/profile', { replace: true });
     } catch (err) {
       if (err.response?.status === 400) {
         const data = err.response.data;
@@ -298,7 +297,7 @@ const CompleteProfile = () => {
                 Account Information
               </h3>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-1">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                     Verified Channel
@@ -308,14 +307,14 @@ const CompleteProfile = () => {
                   </div>
                 </div>
 
-                {/* <div>
+                <div>
                   <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                     User Role
                   </label>
                   <div className="px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-semibold">
                     {user?.role || 'BUYER'}
                   </div>
-                </div> */}
+                </div>
               </div>
             </div>
 

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import { vehicleService } from '../../../../services/api';
+import { useAuth } from '../../../../context/AuthContext';
 
 const Step1VehicleDetails = ({ onSuccess }) => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     vehicle_type_id: '',
     brand_id: '',
@@ -64,21 +66,28 @@ const Step1VehicleDetails = ({ onSuccess }) => {
   // Fetch States when Country changes
   useEffect(() => {
     if (formData.country_id) {
-      vehicleService.getStates(formData.country_id).then(res => setStates(res || [])).catch(console.error);
+      const selectedCountry = countries.find(c => c.id === formData.country_id);
+      if (selectedCountry?.name) {
+        vehicleService.getStates(selectedCountry.name).then(res => setStates(res || [])).catch(console.error);
+      }
     } else {
       setStates([]);
     }
-  }, [formData.country_id]);
+  }, [formData.country_id, countries]);
 
   // Fetch Cities when State changes
   useEffect(() => {
-    if (formData.state_id) {
-      // API requires country and state name/id according to payload
-      vehicleService.getCities(formData.country_id, formData.state_id).then(res => setCities(res || [])).catch(console.error);
+    if (formData.state_id && formData.country_id) {
+      const selectedCountry = countries.find(c => c.id === formData.country_id);
+      const selectedState = states.find(s => s.id === formData.state_id);
+      
+      if (selectedCountry?.name && selectedState?.name) {
+        vehicleService.getCities(selectedCountry.name, selectedState.name).then(res => setCities(res || [])).catch(console.error);
+      }
     } else {
       setCities([]);
     }
-  }, [formData.state_id, formData.country_id]);
+  }, [formData.state_id, formData.country_id, countries, states]);
 
   // Fetch Models when Brand changes
   useEffect(() => {
@@ -116,20 +125,23 @@ const Step1VehicleDetails = ({ onSuccess }) => {
     setLoading(true);
     setError(null);
 
-    // Prepare payload (removing helper ids like country_id, state_id)
+    // Prepare payload
     const payload = {
       vehicle_type_id: formData.vehicle_type_id,
       brand_id: formData.brand_id,
       model_id: formData.model_id,
-      variant_id: formData.variant_id,
-      year: parseInt(formData.year),
+      variant_id: formData.variant_id || null, // handle empty variants
+      year: parseInt(formData.year) || null,
       fuel_type_id: formData.fuel_type_id,
       transmission_type_id: formData.transmission_type_id,
       ownership_type_id: formData.ownership_type_id,
-      kilometers_driven: parseInt(formData.kilometers_driven),
-      price: parseFloat(formData.price),
+      kilometers_driven: parseInt(formData.kilometers_driven) || 0,
+      price: parseFloat(formData.price) || 0,
       description: formData.description,
+      country_id: formData.country_id,
+      state_id: formData.state_id,
       city_id: formData.city_id,
+      seller_id: user?.id,
     };
 
     try {

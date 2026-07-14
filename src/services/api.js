@@ -139,60 +139,60 @@ export const vehicleService = {
     return res.data.data;
   },
   getVehicleTypes: async () => {
-    const res = await api.get('/mp/vehicle-types/');
+    const res = await api.get('/mp/vehicle-types');
     return res.data.data;
   },
   getBrands: async () => {
-    const res = await api.get('/mp/brands/');
+    const res = await api.get('/mp/brands');
     return res.data.data;
   },
   getModels: async (brandId) => {
-    const res = await api.get('/mp/models/', { params: { brand_id: brandId } });
+    const res = await api.get('/mp/models', { params: { brand_id: brandId } });
     return res.data.data;
   },
   getVariants: async (modelId) => {
-    const res = await api.get('/mp/variants/', { params: { model_id: modelId } });
+    const res = await api.get('/mp/variants', { params: { model_id: modelId } });
     return res.data.data;
   },
   getFuelTypes: async () => {
-    const res = await api.get('/mp/fuel-types/');
+    const res = await api.get('/mp/fuel-types');
     return res.data.data;
   },
   getTransmissionTypes: async () => {
-    const res = await api.get('/mp/transmission-types/');
+    const res = await api.get('/mp/transmission-types');
     return res.data.data;
   },
   getOwnershipTypes: async () => {
-    const res = await api.get('/mp/ownership-types/');
+    const res = await api.get('/mp/ownership-types');
     return res.data.data;
   },
   getDocumentTypes: async () => {
-    const res = await api.get('/mp/document-types/');
+    const res = await api.get('/mp/document-types');
     return res.data.data;
   },
   getServiceHistoryTypes: async () => {
-    const res = await api.get('/mp/service-history-types/');
+    const res = await api.get('/mp/service-history-types');
     return res.data.data;
   },
 
   // Listing APIs
   createListing: async (data) => {
-    const res = await api.post('/mp/listings/', data);
+    const res = await api.post('/mp/listings', data);
     return res.data;
   },
   getListing: async (id) => {
-    const res = await api.get(`/mp/listings/${id}/`);
+    const res = await api.get(`/mp/listings/${id}`);
     return res.data;
   },
   uploadExteriorImage: async (listingId, formData, onUploadProgress) => {
-    const res = await api.post(`/mp/listings/${listingId}/images/exterior/`, formData, {
+    const res = await api.post(`/mp/listings/${listingId}/images/exterior`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
     });
     return res.data;
   },
   uploadInteriorImage: async (listingId, formData, onUploadProgress) => {
-    const res = await api.post(`/mp/listings/${listingId}/images/interior/`, formData, {
+    const res = await api.post(`/mp/listings/${listingId}/images/interior`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
     });
@@ -210,6 +210,10 @@ export const vehicleService = {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
     });
+    return res.data;
+  },
+  getListingsDetails: async () => {
+    const res = await api.get('/mp/listings/details');
     return res.data;
   },
 };
