@@ -107,31 +107,31 @@ const ProfileView = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto w-full py-2">
+    <div className="max-w-2xl mx-auto w-full py-1">
       {/* Profile Card */}
-      <div className="bg-card rounded-2xl border border-border shadow-sm p-7 sm:p-10">
-        <div className="space-y-6">
+      <div className="bg-card rounded-2xl border border-border shadow-sm p-5 sm:p-6">
+        <div className="space-y-4">
           {/* Account Metadata */}
-          <div className="border-b border-border pb-6">
-            <h3 className="text-lg font-bold text-foreground mb-4">
+          <div className="border-b border-border pb-4">
+            <h3 className="text-base font-bold text-foreground mb-3">
               Account Information
             </h3>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                   Verified Channel
                 </label>
-                <div className="px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-medium">
+                <div className="px-3 py-2 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-medium">
                   {user?.phone ? `Phone: +91 ${user.phone}` : `Email: ${user?.email}`}
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                   User Role
                 </label>
-                <div className="px-4 py-3 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-semibold">
+                <div className="px-3 py-2 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-semibold">
                   {user?.role || 'BUYER'}
                 </div>
               </div>
@@ -139,82 +139,82 @@ const ProfileView = () => {
           </div>
 
           {/* Profile Fields - Read Only */}
-          <div className="space-y-5">
-            <h3 className="text-lg font-bold text-foreground mb-2">
+          <div className="space-y-3">
+            <h3 className="text-base font-bold text-foreground mb-1.5">
               Personal Details
             </h3>
 
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
+              <label className="block text-xs font-medium text-foreground mb-1.5">
                 Full Name
               </label>
               <div className="flex items-center rounded-xl border border-border bg-background overflow-hidden">
-                <div className="pl-4 pr-1 text-muted-foreground">
-                  <User size={18} />
+                <div className="pl-3 pr-1 text-muted-foreground">
+                  <User size={16} />
                 </div>
-                <div className="w-full px-3 py-3.5 text-foreground text-sm font-medium">
+                <div className="w-full px-2 py-2 text-foreground text-sm font-medium">
                   {formData.full_name || <span className="text-muted-foreground">Not set</span>}
                 </div>
               </div>
             </div>
 
             {/* Country & State */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-xs font-medium text-foreground mb-1.5">
                   Country
                 </label>
                 <div className="relative rounded-xl border border-border bg-background overflow-hidden">
-                  <div className="w-full px-4 py-3.5 text-foreground text-sm font-medium">
+                  <div className="w-full px-3 py-2 text-foreground text-sm font-medium">
                     {getCountryName() || <span className="text-muted-foreground">Not set</span>}
                   </div>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                    <MapPin size={16} />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                    <MapPin size={14} />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-xs font-medium text-foreground mb-1.5">
                   State
                 </label>
                 <div className="relative rounded-xl border border-border bg-background overflow-hidden">
-                  <div className="w-full px-4 py-3.5 text-foreground text-sm font-medium">
+                  <div className="w-full px-3 py-2 text-foreground text-sm font-medium">
                     {getStateName() || <span className="text-muted-foreground">Not set</span>}
                   </div>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                    <MapPin size={16} />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                    <MapPin size={14} />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* City & Pincode */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-xs font-medium text-foreground mb-1.5">
                   City
                 </label>
                 <div className="relative rounded-xl border border-border bg-background overflow-hidden">
-                  <div className="w-full px-4 py-3.5 text-foreground text-sm font-medium">
+                  <div className="w-full px-3 py-2 text-foreground text-sm font-medium">
                     {getCityName() || <span className="text-muted-foreground">Not set</span>}
                   </div>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-                    <MapPin size={16} />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                    <MapPin size={14} />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-xs font-medium text-foreground mb-1.5">
                   Pincode
                 </label>
                 <div className="flex items-center rounded-xl border border-border bg-background overflow-hidden">
-                  <div className="pl-4 pr-1 text-muted-foreground">
-                    <Hash size={18} />
+                  <div className="pl-3 pr-1 text-muted-foreground">
+                    <Hash size={16} />
                   </div>
-                  <div className="w-full px-3 py-3.5 text-foreground text-sm font-medium">
+                  <div className="w-full px-2 py-2 text-foreground text-sm font-medium">
                     {formData.pincode || <span className="text-muted-foreground">Not set</span>}
                   </div>
                 </div>
@@ -223,14 +223,14 @@ const ProfileView = () => {
 
             {/* Address */}
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
+              <label className="block text-xs font-medium text-foreground mb-1.5">
                 Street Address
               </label>
               <div className="flex rounded-xl border border-border bg-background overflow-hidden">
-                <div className="pl-4 pr-1 pt-3.5 text-muted-foreground self-start">
-                  <Home size={18} />
+                <div className="pl-3 pr-1 pt-2.5 text-muted-foreground self-start">
+                  <Home size={16} />
                 </div>
-                <div className="w-full px-3 py-3.5 text-foreground text-sm font-medium min-h-[80px]">
+                <div className="w-full px-2 py-2 text-foreground text-sm font-medium min-h-[50px]">
                   {formData.address || <span className="text-muted-foreground">Not set</span>}
                 </div>
               </div>
@@ -238,11 +238,11 @@ const ProfileView = () => {
           </div>
 
           {/* Actions */}
-          <div className="pt-6 border-t border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <div className="pt-4 border-t border-border flex flex-col sm:flex-row gap-3 justify-between items-center">
             <button
               type="button"
               onClick={() => navigate('/dashboard/user')}
-              className="w-full sm:w-auto px-6 py-3 border border-border rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors order-2 sm:order-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full sm:w-auto px-5 py-2.5 border border-border rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors order-2 sm:order-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Cancel
             </button>
@@ -250,7 +250,7 @@ const ProfileView = () => {
             <button
               type="button"
               onClick={() => navigate('/dashboard/user/profile/edit')}
-              className="w-full sm:w-auto px-8 py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98] shadow-sm"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98] shadow-sm"
             >
               Update Profile
             </button>
@@ -259,7 +259,7 @@ const ProfileView = () => {
       </div>
 
       {/* Security Badge */}
-      <div className="flex items-center justify-center gap-1.5 mt-8 text-xs text-muted-foreground">
+      <div className="flex items-center justify-center gap-1.5 mt-4 text-xs text-muted-foreground">
         <ShieldCheck size={14} className="text-primary" />
         <span>All data is securely validated and encrypted</span>
       </div>

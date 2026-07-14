@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { vehicleService } from '../services/api';
-import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car } from 'lucide-react';
+import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const VehicleDetails = () => {
   const { id } = useParams();
@@ -87,6 +87,22 @@ const VehicleDetails = () => {
               <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-2 border border-border/50">
                 <Car size={16} /> {vehicle.vehicle_type || 'Car'}
               </div>
+              {images.length > 1 && (
+                <>
+                  <button 
+                    onClick={() => setActiveImage(prev => (prev === 0 ? images.length - 1 : prev - 1))}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-black/40 text-white rounded-full hover:bg-black/60 transition-colors backdrop-blur-sm"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button 
+                    onClick={() => setActiveImage(prev => (prev === images.length - 1 ? 0 : prev + 1))}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-black/40 text-white rounded-full hover:bg-black/60 transition-colors backdrop-blur-sm"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              )}
             </div>
             
             {/* Thumbnail Gallery */}
@@ -106,80 +122,77 @@ const VehicleDetails = () => {
           </div>
 
           {/* Right Column - Details */}
-          <div className="space-y-6">
-            <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-              <div className="mb-6">
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-                  {vehicle.brand} {vehicle.model} <span className="text-muted-foreground font-medium text-xl">{vehicle.variant}</span>
+          <div className="space-y-4">
+            <div className="bg-card rounded-2xl p-5 border border-border shadow-sm flex flex-col h-full max-h-[75vh] overflow-y-auto hide-scrollbar">
+              <div className="mb-4">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
+                  {vehicle.brand} {vehicle.model} <span className="text-muted-foreground font-medium text-lg">{vehicle.variant}</span>
                 </h1>
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
-                  <MapPin size={16} /> {vehicle.location}
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <MapPin size={14} /> {vehicle.location}
                 </p>
               </div>
 
-              <div className="text-3xl font-bold text-primary mb-6 pb-6 border-b border-border">
+              <div className="text-2xl font-bold text-primary mb-4 pb-4 border-b border-border">
                 {formatPrice(vehicle.price)}
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="flex flex-col gap-1 p-3 bg-muted rounded-xl">
-                  <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider flex items-center gap-1.5"><Calendar size={14}/> Year</span>
-                  <span className="font-bold text-foreground">{vehicle.year}</span>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="flex flex-col gap-0.5 p-2.5 bg-muted rounded-xl">
+                  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1"><Calendar size={12}/> Year</span>
+                  <span className="font-bold text-sm text-foreground">{vehicle.year}</span>
                 </div>
-                <div className="flex flex-col gap-1 p-3 bg-muted rounded-xl">
-                  <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider flex items-center gap-1.5"><Gauge size={14}/> Driven</span>
-                  <span className="font-bold text-foreground">{vehicle.kilometers_driven ? `${vehicle.kilometers_driven.toLocaleString('en-IN')} km` : 'N/A'}</span>
+                <div className="flex flex-col gap-0.5 p-2.5 bg-muted rounded-xl">
+                  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1"><Gauge size={12}/> Driven</span>
+                  <span className="font-bold text-sm text-foreground">{vehicle.kilometers_driven ? `${vehicle.kilometers_driven.toLocaleString('en-IN')} km` : 'N/A'}</span>
                 </div>
-                <div className="flex flex-col gap-1 p-3 bg-muted rounded-xl">
-                  <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider flex items-center gap-1.5"><Fuel size={14}/> Fuel</span>
-                  <span className="font-bold text-foreground">{vehicle.fuel_type}</span>
+                <div className="flex flex-col gap-0.5 p-2.5 bg-muted rounded-xl">
+                  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1"><Fuel size={12}/> Fuel</span>
+                  <span className="font-bold text-sm text-foreground">{vehicle.fuel_type}</span>
                 </div>
-                <div className="flex flex-col gap-1 p-3 bg-muted rounded-xl">
-                  <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider flex items-center gap-1.5"><Settings2 size={14}/> Trans.</span>
-                  <span className="font-bold text-foreground">{vehicle.transmission}</span>
+                <div className="flex flex-col gap-0.5 p-2.5 bg-muted rounded-xl">
+                  <span className="text-muted-foreground text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1"><Settings2 size={12}/> Trans.</span>
+                  <span className="font-bold text-sm text-foreground">{vehicle.transmission}</span>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-4 border-t border-border">
-                <button className="w-full bg-foreground hover:bg-foreground/90 text-background py-3.5 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-lg">
-                  <Phone size={20} /> Contact Seller
+              <div className="mb-4">
+                <h3 className="text-sm font-bold text-foreground mb-2 pb-2 border-b border-border">Vehicle Highlights</h3>
+                <ul className="space-y-1.5 text-sm">
+                  <li className="flex items-start justify-between">
+                    <span className="text-muted-foreground">Ownership</span>
+                    <span className="font-semibold text-foreground">{vehicle.ownership}</span>
+                  </li>
+                  <li className="flex items-start justify-between">
+                    <span className="text-muted-foreground">Status</span>
+                    <span className="font-semibold text-foreground flex items-center gap-1">
+                      <CheckCircle size={14} className="text-green-500" /> {vehicle.status}
+                    </span>
+                  </li>
+                  {vehicle.seller_phone && (
+                    <li className="flex items-start justify-between">
+                      <span className="text-muted-foreground">Seller Phone</span>
+                      <span className="font-semibold text-foreground">{vehicle.seller_phone}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              {vehicle.description && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-bold text-foreground mb-2 pb-2 border-b border-border">Description</h3>
+                  <p className="text-foreground/80 leading-relaxed whitespace-pre-line text-xs">
+                    {vehicle.description}
+                  </p>
+                </div>
+              )}
+              
+              <div className="mt-auto pt-4 border-t border-border">
+                <button className="w-full bg-foreground hover:bg-foreground/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base">
+                  <Phone size={18} /> Contact Seller
                 </button>
               </div>
             </div>
-
-            {/* Additional Details Card */}
-            <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-              <h3 className="text-lg font-bold text-foreground mb-4 pb-3 border-b border-border">Vehicle Highlights</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start justify-between">
-                  <span className="text-muted-foreground">Ownership</span>
-                  <span className="font-semibold text-foreground">{vehicle.ownership}</span>
-                </li>
-                <li className="flex items-start justify-between">
-                  <span className="text-muted-foreground">Status</span>
-                  <span className="font-semibold text-foreground flex items-center gap-1">
-                    <CheckCircle size={16} className="text-green-500" /> {vehicle.status}
-                  </span>
-                </li>
-                {vehicle.seller_phone && (
-                  <li className="flex items-start justify-between">
-                    <span className="text-muted-foreground">Seller Phone</span>
-                    <span className="font-semibold text-foreground">{vehicle.seller_phone}</span>
-                  </li>
-                )}
-              </ul>
-            </div>
-            
-            {/* Description Card */}
-            {vehicle.description && (
-              <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
-                <h3 className="text-lg font-bold text-foreground mb-4 pb-3 border-b border-border">Description</h3>
-                <p className="text-foreground/80 leading-relaxed whitespace-pre-line">
-                  {vehicle.description}
-                </p>
-              </div>
-            )}
-
           </div>
 
         </div>

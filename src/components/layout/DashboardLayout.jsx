@@ -24,11 +24,13 @@ const DashboardLayout = () => {
   // Check extra routes first (more specific paths), then sidebar items
   let pageTitle = EXTRA_ROUTE_LABELS[location.pathname];
   if (!pageTitle) {
-    const currentNav = navItems.find(
-      (item) =>
-        location.pathname === item.path ||
-        location.pathname.startsWith(item.path + '/')
-    );
+    const currentNav = [...navItems]
+      .sort((a, b) => b.path.length - a.path.length)
+      .find(
+        (item) =>
+          location.pathname === item.path ||
+          location.pathname.startsWith(item.path + '/')
+      );
     pageTitle = currentNav ? currentNav.label : 'Dashboard';
   }
 
@@ -56,18 +58,6 @@ const DashboardLayout = () => {
             <span className="font-semibold text-foreground">
               {pageTitle}
             </span>
-          </div>
-
-          {/* Right: User info */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground hidden sm:inline">
-              {user?.full_name || 'User'}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-xs font-bold text-primary">
-                {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
-              </span>
-            </div>
           </div>
         </header>
 
