@@ -16,9 +16,10 @@ export const SIDEBAR_CONFIG = {
   ],
   ADMIN: [
     { label: 'Admin Hub', path: '/dashboard/admin', icon: 'ShieldAlert' },
+    { label: 'Profile', path: '/dashboard/admin/profile', icon: 'User' },
     { label: 'Users', path: '/dashboard/admin/users', icon: 'Users' },
     { label: 'All Listings', path: '/dashboard/admin/listings', icon: 'List' },
-    { label: 'System Logs', path: '/dashboard/admin/logs', icon: 'TerminalSquare' },
-    { label: 'Settings', path: '/dashboard/admin/settings', icon: 'Settings' },
+    // { label: 'System Logs', path: '/dashboard/admin/logs', icon: 'TerminalSquare' },
+    // { label: 'Settings', path: '/dashboard/admin/settings', icon: 'Settings' },
   ]
 };
