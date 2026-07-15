@@ -226,4 +226,31 @@ export const vehicleService = {
   },
 };
 
+export const adminService = {
+  getDashboardStats: async (days = 7) => {
+    const res = await api.get('/auth/admin/dashboard/stats/', { params: { days } });
+    return res.data;
+  },
+  getVehicleDashboardStats: async () => {
+    const res = await api.get('/mp/admin/dashboard/');
+    return res.data;
+  },
+  getUsers: async (params) => {
+    const res = await api.get('/auth/admin/users/', { params });
+    return res.data;
+  },
+  getUser: async (userId) => {
+    const res = await api.get(`/auth/admin/users/${userId}/`);
+    return res.data;
+  },
+  blockUser: async (userId) => {
+    const res = await api.post(`/auth/admin/users/${userId}/block/`);
+    return res.data;
+  },
+  unblockUser: async (userId) => {
+    const res = await api.post(`/auth/admin/users/${userId}/unblock/`);
+    return res.data;
+  },
+};
+
 export default api;
