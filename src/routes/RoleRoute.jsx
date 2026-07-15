@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const RoleRoute = ({ children, allowedRoles }) => {
@@ -36,7 +36,7 @@ const RoleRoute = ({ children, allowedRoles }) => {
     }
   }
 
-  return children;
+  return children ? children : <Outlet />;
 };
 
 export default RoleRoute;
