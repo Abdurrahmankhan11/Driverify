@@ -21,6 +21,7 @@ import MiddlemanDashboard from '../pages/Dashboards/MiddlemanDashboard.jsx';
 import AdminDashboard from '../pages/Dashboards/AdminDashboard.jsx';
 import AdminUserList from '../pages/Dashboards/AdminUserList.jsx';
 import AdminUserDetail from '../pages/Dashboards/AdminUserDetail.jsx';
+import AdminListings from '../pages/Dashboards/AdminListings.jsx';
 import PostVehicleFlow from '../pages/Dashboards/PostVehicle/PostVehicleFlow.jsx';
 
 // Shared / Other
@@ -58,11 +59,12 @@ const AppRoutes = () => {
             <Route path="middleman" element={<MiddlemanDashboard />} />
           </Route>
 
-          {/* ADMIN Role Routes */}
           <Route element={<RoleRoute allowedRoles={['ADMIN']} />}>
             <Route path="admin" element={<AdminDashboard />} />
             <Route path="admin/users" element={<AdminUserList />} />
             <Route path="admin/users/:id" element={<AdminUserDetail />} />
+            <Route path="admin/listings" element={<AdminListings />} />
+            <Route path="admin/listings/:id" element={<VehicleDetails />} />
           </Route>
 
         </Route>
