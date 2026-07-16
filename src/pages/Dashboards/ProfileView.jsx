@@ -7,6 +7,7 @@ import { authService } from '../../services/api';
 const ProfileView = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const basePath = `/dashboard/${(user?.role || 'user').toLowerCase()}`;
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -241,7 +242,7 @@ const ProfileView = () => {
           <div className="pt-4 border-t border-border flex flex-col sm:flex-row gap-3 justify-between items-center">
             <button
               type="button"
-              onClick={() => navigate('/dashboard/user')}
+              onClick={() => navigate(basePath)}
               className="w-full sm:w-auto px-5 py-2.5 border border-border rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors order-2 sm:order-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Cancel
@@ -249,7 +250,7 @@ const ProfileView = () => {
 
             <button
               type="button"
-              onClick={() => navigate('/dashboard/user/profile/edit')}
+              onClick={() => navigate(`${basePath}/profile/edit`)}
               className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 order-1 sm:order-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98] shadow-sm"
             >
               Update Profile
