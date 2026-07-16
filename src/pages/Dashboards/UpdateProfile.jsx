@@ -17,6 +17,7 @@ import { authService } from '../../services/api';
 const UpdateProfile = () => {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
+  const basePath = `/dashboard/${(user?.role || 'user').toLowerCase()}`;
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -224,7 +225,7 @@ const UpdateProfile = () => {
       updateUser(updatedUser);
       setSuccessMessage('Profile updated successfully!');
       // Navigate immediately after updating user to avoid timing/race issues
-      navigate('/dashboard/user/profile', { replace: true });
+      navigate(`${basePath}/profile`, { replace: true });
     } catch (err) {
       if (err.response?.status === 400) {
         const data = err.response.data;
@@ -262,7 +263,7 @@ const UpdateProfile = () => {
       {/* Page Header */}
       <div className="flex items-center gap-4 mb-8">
         <button
-          onClick={() => navigate('/dashboard/user/profile')}
+          onClick={() => navigate(`${basePath}/profile`)}
           className="p-2 rounded-xl border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           title="Back to profile"
         >
@@ -566,7 +567,7 @@ const UpdateProfile = () => {
           <div className="pt-6 border-t border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
             <button
               type="button"
-              onClick={() => navigate('/dashboard/user/profile')}
+              onClick={() => navigate(`${basePath}/profile`)}
               className="w-full sm:w-auto px-6 py-3 border border-border rounded-xl text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors order-2 sm:order-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary inline-flex items-center justify-center gap-2"
             >
               <X size={16} />

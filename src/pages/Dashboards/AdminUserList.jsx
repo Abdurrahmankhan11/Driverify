@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Badge } from '../../components/ui/badge';
-import { Search, ChevronLeft, ChevronRight, UserCog } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, UserCog, Mail, Phone, Eye, User } from 'lucide-react';
 
 const AdminUserList = () => {
   const navigate = useNavigate();
@@ -109,14 +109,14 @@ const AdminUserList = () => {
       {/* Table */}
       <div className="rounded-md border bg-card shadow-sm">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Contact</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead className="text-right">Action</TableHead>
+          <TableHeader className="bg-muted/30">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">User</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Contact</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Role</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Status</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Joined</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -136,42 +136,60 @@ const AdminUserList = () => {
               users.map((u) => (
                 <TableRow 
                   key={u.id} 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors group"
                   onClick={() => navigate(`/dashboard/admin/users/${u.id}`)}
                 >
-                  <TableCell>
-                    <div className="font-medium">{u.full_name || 'N/A'}</div>
-                    <div className="text-xs text-muted-foreground">{u.id.split('-')[0]}...</div>
+                  <TableCell className="py-4">
+                    <div className="flex items-center gap-3.5">
+                      {/* <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center font-bold text-sm shrink-0">
+                        {u.full_name ? u.full_name.charAt(0).toUpperCase() : 'N'}
+                      </div> */}
+                      <User className="h-4 w-4" />
+                      <div>
+          
+                        <div className="font-semibold text-foreground text-sm uppercase">{u.full_name || 'N/A'}</div>
+                        {/* <div className="text-[11px] font-medium text-muted-foreground mt-0.5 uppercase">ID: {u.id.split('-')[0]}</div> */}
+                      </div>
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="text-sm">{u.phone}</div>
-                    <div className="text-xs text-muted-foreground">{u.email || 'No email'}</div>
+                  <TableCell className="py-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                        <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <span>{u.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                        <Mail className="h-4 w-4 shrink-0" />
+                        <span className="truncate max-w-[150px]">{u.email || 'No email'}</span>
+                      </div>
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={u.role === 'ADMIN' ? 'destructive' : u.role === 'MIDDLEMAN' ? 'secondary' : 'default'} className="text-xs">
+                  <TableCell className="py-4">
+                    <Badge variant={u.role === 'ADMIN' ? 'destructive' : u.role === 'MIDDLEMAN' ? 'secondary' : 'default'} className="text-[11px] uppercase tracking-wider font-bold">
                       {u.role}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-4">
                     {u.is_active ? (
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
                         Active
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-red-50 text-red-700 border border-red-200/60 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20">
                         Blocked
                       </span>
                     )}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {new Date(u.created_at).toLocaleDateString()}
+                  <TableCell className="py-4 text-sm font-semibold text-muted-foreground">
+                    {new Date(u.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                   </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={(e) => {
+                  <TableCell className="py-4 text-right">
+                    <Button variant="black" size="sm" className="h-8 text-xs " onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/dashboard/admin/users/${u.id}`);
                     }}>
-                      View
+                      View Details
+                      
                     </Button>
                   </TableCell>
                 </TableRow>
