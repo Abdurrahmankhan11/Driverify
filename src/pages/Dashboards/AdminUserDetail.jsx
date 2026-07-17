@@ -163,16 +163,18 @@ const AdminUserDetail = () => {
                   <span className="text-orange-600 font-semibold flex items-center gap-1.5"><XCircle className="h-4 w-4" /> Incomplete</span>
                 )}
               </div>
-              <Button 
-                variant={userData.is_active ? "destructive" : "default"} 
-                className="gap-2 w-full sm:w-auto"
-                onClick={handleBlockToggle}
-                disabled={actionLoading || (userData.role === 'ADMIN' && userData.is_active)}
-              >
-                {actionLoading ? "Processing..." : (
-                  userData.is_active ? <><Ban className="h-4 w-4" /> Block User</> : <><CheckCircle2 className="h-4 w-4" /> Unblock User</>
-                )}
-              </Button>
+              {userData.role !== 'ADMIN' && (
+                <Button 
+                  variant={userData.is_active ? "destructive" : "default"} 
+                  className="gap-2 w-full sm:w-auto"
+                  onClick={handleBlockToggle}
+                  disabled={actionLoading}
+                >
+                  {actionLoading ? "Processing..." : (
+                    userData.is_active ? <><Ban className="h-4 w-4" /> Block User</> : <><CheckCircle2 className="h-4 w-4" /> Unblock User</>
+                  )}
+                </Button>
+              )}
             </div>
           </CardHeader>
           
