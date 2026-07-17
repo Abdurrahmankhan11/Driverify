@@ -12,7 +12,7 @@ const AdminUserList = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filters & Pagination
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('ALL');
@@ -72,18 +72,20 @@ const AdminUserList = () => {
       <div className="flex flex-col md:flex-row gap-4 items-center bg-card p-4 rounded-lg shadow-sm border">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search by name, email, or phone..." 
+          <Input
+            placeholder="Search by name, email, or phone..."
             value={search}
             onChange={handleSearchChange}
             className="pl-9 w-full"
           />
         </div>
-        
+
         <div className="flex gap-4 w-full md:w-auto">
           <Select value={role} onValueChange={(val) => { setRole(val); setPage(1); }}>
             <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Role" />
+              <SelectValue placeholder="Role">
+                {role === 'ALL' ? 'All Roles' : role === 'USER' ? 'User' : role === 'MIDDLEMAN' ? 'Middleman' : role === 'ADMIN' ? 'Admin' : 'Role'}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">All Roles</SelectItem>
@@ -95,7 +97,9 @@ const AdminUserList = () => {
 
           <Select value={isActive} onValueChange={(val) => { setIsActive(val); setPage(1); }}>
             <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder="Status">
+                {isActive === 'ALL' ? 'All Status' : isActive === 'true' ? 'Active' : isActive === 'false' ? 'Blocked' : 'Status'}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">All Status</SelectItem>
@@ -112,7 +116,8 @@ const AdminUserList = () => {
           <TableHeader className="bg-muted/30">
             <TableRow className="hover:bg-transparent">
               <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">User</TableHead>
-              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Contact</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Phone</TableHead>
+              <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Email</TableHead>
               <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Role</TableHead>
               <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Status</TableHead>
               <TableHead className="text-xs uppercase tracking-wider font-semibold text-muted-foreground h-11">Joined</TableHead>
@@ -122,20 +127,20 @@ const AdminUserList = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
                   <div className="animate-pulse">Loading users...</div>
                 </TableCell>
               </TableRow>
             ) : users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="h-32 text-center text-muted-foreground">
                   No users found matching your criteria.
                 </TableCell>
               </TableRow>
             ) : (
               users.map((u) => (
-                <TableRow 
-                  key={u.id} 
+                <TableRow
+                  key={u.id}
                   className="cursor-pointer hover:bg-muted/50 transition-colors group"
                   onClick={() => navigate(`/dashboard/admin/users/${u.id}`)}
                 >
@@ -146,22 +151,22 @@ const AdminUserList = () => {
                       </div> */}
                       <User className="h-4 w-4" />
                       <div>
-          
+
                         <div className="font-semibold text-foreground text-sm uppercase">{u.full_name || 'N/A'}</div>
                         {/* <div className="text-[11px] font-medium text-muted-foreground mt-0.5 uppercase">ID: {u.id.split('-')[0]}</div> */}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="py-4">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                        <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <span>{u.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                        <Mail className="h-4 w-4 shrink-0" />
-                        <span className="truncate max-w-[150px]">{u.email || 'No email'}</span>
-                      </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                      <span>{u.phone || 'N/A'}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="py-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
+                      <Mail className="h-4 w-4 shrink-0" />
+                      <span className="truncate max-w-[150px]">{u.email || 'No email'}</span>
                     </div>
                   </TableCell>
                   <TableCell className="py-4">
@@ -189,7 +194,7 @@ const AdminUserList = () => {
                       navigate(`/dashboard/admin/users/${u.id}`);
                     }}>
                       View Details
-                      
+
                     </Button>
                   </TableCell>
                 </TableRow>

@@ -16,7 +16,7 @@ const DashboardLayout = () => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
-  
+
   // Find current page title based on path
   const role = user?.role || 'USER';
   const navItems = SIDEBAR_CONFIG[role] || SIDEBAR_CONFIG.USER;
@@ -24,7 +24,8 @@ const DashboardLayout = () => {
   // Check extra routes first (more specific paths), then sidebar items
   let pageTitle = EXTRA_ROUTE_LABELS[location.pathname];
   if (!pageTitle) {
-    const currentNav = [...navItems]
+    const flatNavItems = navItems.flatMap(section => section.items || []);
+    const currentNav = [...flatNavItems]
       .sort((a, b) => b.path.length - a.path.length)
       .find(
         (item) =>
@@ -62,15 +63,15 @@ const DashboardLayout = () => {
         </header>
 
         <ShowNotification open={notificationOpen} onClose={() => setNotificationOpen(false)} />
-        
+
         <div className="flex-1 p-4 lg:p-8 overflow-y-auto bg-[#F8FAFC]">
           <Outlet />
         </div>
       </main>
-      
+
       {/* Mobile Sidebar Overlay */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
