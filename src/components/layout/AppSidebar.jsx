@@ -44,41 +44,50 @@ const AppSidebar = ({ mobileMenuOpen, setMobileMenuOpen }) => {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 py-4 flex flex-col gap-1 px-3 overflow-y-auto overflow-x-hidden">
-        {navItems.map((item, idx) => {
-          const IconComponent = Icons[item.icon] || Icons.Circle;
-          
-          return (
-            <NavLink
-              key={idx}
-              to={item.path}
-              className={({ isActive }) => {
-                const isHomePath = item.path === `/dashboard/${role.toLowerCase()}`;
-                const isVehicleDetails = window.location.pathname.startsWith(`/dashboard/${role.toLowerCase()}/vehicle/`);
-                
-                // If we're on a vehicle details page, Home should be active
-                const shouldBeActive = (isActive && !isHomePath) || 
-                                       (isHomePath && (isActive || isVehicleDetails));
+      <nav className="flex-1 py-4 flex flex-col gap-4 px-3 overflow-y-auto overflow-x-hidden">
+        {navItems.map((section, sIdx) => (
+          <div key={sIdx} className="flex flex-col gap-1">
+            {!collapsed && section.section && (
+              <div className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                {section.section}
+              </div>
+            )}
+            {section.items.map((item, idx) => {
+              const IconComponent = Icons[item.icon] || Icons.Circle;
+              
+              return (
+                <NavLink
+                  key={idx}
+                  to={item.path}
+                  className={({ isActive }) => {
+                    const isHomePath = item.path === `/dashboard/${role.toLowerCase()}`;
+                    const isVehicleDetails = window.location.pathname.startsWith(`/dashboard/${role.toLowerCase()}/vehicle/`);
+                    
+                    // If we're on a vehicle details page, Home should be active
+                    const shouldBeActive = (isActive && !isHomePath) || 
+                                           (isHomePath && (isActive || isVehicleDetails));
 
-                return cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group relative",
-                  shouldBeActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                );
-              }}
-              title={collapsed ? item.label : undefined}
-              end={item.path === `/dashboard/${role.toLowerCase()}`}
-            >
-              <IconComponent className="h-5 w-5 flex-shrink-0" />
-              {!collapsed && (
-                <span className="text-sm font-medium whitespace-nowrap">
-                  {item.label}
-                </span>
-              )}
-            </NavLink>
-          );
-        })}
+                    return cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group relative",
+                      shouldBeActive
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    );
+                  }}
+                  title={collapsed ? item.label : undefined}
+                  end={item.path === `/dashboard/${role.toLowerCase()}`}
+                >
+                  <IconComponent className="h-5 w-5 flex-shrink-0" />
+                  {!collapsed && (
+                    <span className="text-sm font-medium whitespace-nowrap">
+                      {item.label}
+                    </span>
+                  )}
+                </NavLink>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* User Profile Footer */}

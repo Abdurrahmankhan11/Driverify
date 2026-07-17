@@ -84,12 +84,12 @@ const AdminDashboard = () => {
         easing: 'easeinout',
         speed: 800,
         animateGradually: {
-            enabled: true,
-            delay: 150
+          enabled: true,
+          delay: 150
         },
         dynamicAnimation: {
-            enabled: true,
-            speed: 350
+          enabled: true,
+          speed: 350
         }
       }
     },
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
           <Skeleton className="h-10 w-48 rounded-lg" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1,2,3,4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Skeleton className="h-[350px] w-full rounded-xl" />
@@ -117,7 +117,7 @@ const AdminDashboard = () => {
         </div>
         <Skeleton className="h-8 w-64 mt-10" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1,2,3,4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 w-full rounded-xl" />)}
         </div>
         <Skeleton className="h-[350px] w-full rounded-xl" />
       </div>
@@ -127,7 +127,7 @@ const AdminDashboard = () => {
   const totals = stats?.totals || {};
   const signups = stats?.signups || {};
   const loginActivity = stats?.login_activity || {};
-  
+
   const vSummary = vehicleStats?.summary || {};
   const vTypeSummary = vehicleStats?.vehicle_type_summary || [];
 
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
     name: 'Listings',
     data: vTypeSummary.map(t => t.count)
   }];
-  
+
   // Operations Overview Chart (Polar Area)
   const opsSeries = [
     vSummary.total_vehicle_listings || 0,
@@ -265,17 +265,17 @@ const AdminDashboard = () => {
           <p className="text-muted-foreground mt-1">Welcome, {user?.full_name || 'Admin'}. Here is your system overview.</p>
         </div>
         <div className="flex bg-muted p-1 rounded-lg border border-border/50 shadow-sm">
-          <Button 
-            variant={days === 7 ? "default" : "ghost"} 
-            size="sm" 
+          <Button
+            variant={days === 7 ? "default" : "ghost"}
+            size="sm"
             onClick={() => setDays(7)}
             className={`rounded-md px-4 ${days === 7 ? 'shadow-sm' : 'hover:bg-background/50'}`}
           >
             Last 7 Days
           </Button>
-          <Button 
-            variant={days === 30 ? "default" : "ghost"} 
-            size="sm" 
+          <Button
+            variant={days === 30 ? "default" : "ghost"}
+            size="sm"
             onClick={() => setDays(30)}
             className={`rounded-md px-4 ${days === 30 ? 'shadow-sm' : 'hover:bg-background/50'}`}
           >
@@ -286,31 +286,31 @@ const AdminDashboard = () => {
 
       {/* User Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        <StatCard 
-          title="Total Users" 
-          value={totals.total_users || 0} 
+        <StatCard
+          title="Total Users"
+          value={totals.total_users || 0}
           subtext={`Active: ${totals.active_users || 0} | Blocked: ${totals.blocked_users || 0}`}
           icon={Users}
           colorClass="border-l-blue-500"
         />
-        <StatCard 
-          title="Phone Verified" 
-          value={totals.phone_verified || 0} 
+        <StatCard
+          title="Phone Verified"
+          value={totals.phone_verified || 0}
           subtext="Users with verified phones"
           icon={Phone}
           colorClass="border-l-green-500"
           tooltipText="Number of users who have successfully verified their phone number via OTP."
         />
-        <StatCard 
-          title={`Signups (Last ${days}d)`} 
-          value={signups[`last_${days}_days`] || 0} 
+        <StatCard
+          title={`Signups (Last ${days}d)`}
+          value={signups[`last_${days}_days`] || 0}
           subtext={`Today: ${signups.today || 0}`}
           icon={TrendingUp}
           colorClass="border-l-purple-500"
         />
-        <StatCard 
-          title={`Successful Logins (Last ${days}d)`} 
-          value={loginActivity[`last_${days}_days_successful`] || 0} 
+        <StatCard
+          title={`Successful Logins (Last ${days}d)`}
+          value={loginActivity[`last_${days}_days_successful`] || 0}
           subtext={`Failed: ${loginActivity[`last_${days}_days_failed`] || 0}`}
           icon={UserCheck}
           colorClass="border-l-orange-500"
@@ -325,13 +325,13 @@ const AdminDashboard = () => {
             <CardTitle className="text-lg">Signup Trend</CardTitle>
           </CardHeader>
           <CardContent>
-             {signups.trend && signups.trend.length > 0 ? (
-               <div className="h-[300px] w-full">
-                 <Chart options={signupOptions} series={signupSeries} type="area" height="100%" width="100%" />
-               </div>
-             ) : (
-               <div className="h-[300px] flex items-center justify-center text-muted-foreground">No signup data for this period.</div>
-             )}
+            {signups.trend && signups.trend.length > 0 ? (
+              <div className="h-[300px] w-full">
+                <Chart options={signupOptions} series={signupSeries} type="area" height="100%" width="100%" />
+              </div>
+            ) : (
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">No signup data for this period.</div>
+            )}
           </CardContent>
         </Card>
 
@@ -362,36 +362,36 @@ const AdminDashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <StatCard 
-              title="Total Listings" 
-              value={vSummary.total_vehicle_listings || 0} 
+            <StatCard
+              title="Total Listings"
+              value={vSummary.total_vehicle_listings || 0}
               subtext="Vehicles on platform"
               icon={List}
               colorClass="border-l-indigo-500"
             />
-            <StatCard 
-              title="Brands & Models" 
-              value={vSummary.brands || 0} 
+            <StatCard
+              title="Brands & Models"
+              value={vSummary.brands || 0}
               subtext={`${vSummary.models || 0} Models across ${vSummary.brands || 0} Brands`}
               icon={Tag}
               colorClass="border-l-cyan-500"
             />
-            <StatCard 
-              title="Vehicle Types" 
-              value={vSummary.vehicle_types || 0} 
+            <StatCard
+              title="Vehicle Types"
+              value={vSummary.vehicle_types || 0}
               subtext="Categories available"
               icon={Layers}
               colorClass="border-l-pink-500"
             />
-            <StatCard 
-              title="Variants" 
-              value={vSummary.variants || 0} 
+            <StatCard
+              title="Variants"
+              value={vSummary.variants || 0}
               subtext="Specific trims/variants"
               icon={Box}
               colorClass="border-l-yellow-500"
             />
           </div>
-          
+
           <div className="lg:col-span-1">
             <Card className="shadow-sm border-border/50 h-full flex flex-col">
               <CardHeader className="pb-2">

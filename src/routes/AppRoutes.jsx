@@ -42,7 +42,7 @@ const AppRoutes = () => {
 
         {/* Dashboard Routes with Layout */}
         <Route path="/dashboard" element={<DashboardLayout />}>
-          
+
           {/* USER Role Routes */}
           <Route element={<RoleRoute allowedRoles={['USER']} />}>
             <Route path="user" element={<UserDashboard />} />
