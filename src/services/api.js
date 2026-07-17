@@ -212,8 +212,8 @@ export const vehicleService = {
     });
     return res.data;
   },
-  getListingsDetails: async () => {
-    const res = await api.get('/mp/listings/details');
+  getListingsDetails: async (params) => {
+    const res = await api.get('/mp/listings/details', { params });
     return res.data;
   },
   getMyListings: async () => {
