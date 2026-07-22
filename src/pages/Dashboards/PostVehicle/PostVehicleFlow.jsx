@@ -17,6 +17,7 @@ const steps = [
 
 const PostVehicleFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const currentStep = currentStepIndex + 1;
   const [listingId, setListingId] = useState(null);
   const [listingStatus, setListingStatus] = useState('');
   
@@ -180,32 +181,32 @@ const PostVehicleFlow = () => {
 
       <Card>
         <CardContent className="p-6">
-          {steps[currentStepIndex].id === 'details' && (
+          {currentStep === 1 && (
             <Step1VehicleDetails 
               onSuccess={handleDetailsSubmitted} 
             />
           )}
-          {steps[currentStepIndex].id === 'exterior' && (
+          {currentStep === 2 && (
             <Step2ExteriorImages 
               listingId={listingId} 
               onNext={handleNext}
               onRegisterFileHandler={registerFileHandler}
             />
           )}
-          {steps[currentStepIndex].id === 'interior' && (
+          {currentStep === 3 && (
             <Step3InteriorImages 
               listingId={listingId} 
               onNext={handleNext}
               onRegisterFileHandler={registerFileHandler}
             />
           )}
-          {steps[currentStepIndex].id === 'documents' && (
+          {currentStep === 4 && (
             <Step4Documents 
               listingId={listingId} 
               onNext={handleNext} 
             />
           )}
-          {steps[currentStepIndex].id === 'review' && (
+          {currentStep === 5 && (
             <Step5Review 
               listingId={listingId} 
               vehicleDetails={vehicleDetails}
