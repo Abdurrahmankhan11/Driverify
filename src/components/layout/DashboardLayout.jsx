@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation, Link } from 'react-router-dom';
 import AppSidebar from './AppSidebar';
 import ShowNotification from '../common/ShowNotification';
-import { Home, ChevronRight } from 'lucide-react';
+import { Home, ChevronRight, Bell } from 'lucide-react';
 import { SIDEBAR_CONFIG } from '../../constants/sidebarConfig';
 import { useAuth } from '../../context/AuthContext';
 
@@ -59,6 +59,17 @@ const DashboardLayout = () => {
             <span className="font-semibold text-foreground">
               {pageTitle}
             </span>
+          </div>
+
+          {/* Right: Notifications */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setNotificationOpen(true)}
+              className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors relative"
+              aria-label="Notifications"
+            >
+              <Bell size={20} />
+            </button>
           </div>
         </header>
 

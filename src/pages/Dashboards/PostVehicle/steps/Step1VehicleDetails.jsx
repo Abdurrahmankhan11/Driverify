@@ -147,7 +147,12 @@ const Step1VehicleDetails = ({ onSuccess }) => {
     try {
       const response = await vehicleService.createListing(payload);
       if (response && response.success !== false) { 
-        onSuccess(payload, response.listing_id || response.id, response.status); 
+        const selectedType = vehicleTypes.find(vt => String(vt.id) === String(formData.vehicle_type_id));
+        const payloadWithTypeName = { 
+          ...payload, 
+          vehicle_type_name: selectedType?.name?.toLowerCase() 
+        };
+        onSuccess(payloadWithTypeName, response.listing_id || response.id, response.status); 
       } else {
         setError(response.message || 'Failed to create listing');
       }

@@ -118,7 +118,7 @@ const ProfileView = () => {
               Account Information
             </h3>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-1">
               <div>
                 <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                   Verified Channel
@@ -128,14 +128,14 @@ const ProfileView = () => {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
                   User Role
                 </label>
                 <div className="px-3 py-2 bg-muted border border-border rounded-xl text-muted-foreground text-sm font-semibold">
                   {user?.role || 'BUYER'}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

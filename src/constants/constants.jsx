@@ -3,9 +3,9 @@ export const constants = {
   isOffline: true,
 
 
-  // baseUrl: "https://br2bkzxc-8000.inc1.devtunnels.ms",//Shabaz
+  baseUrl: "https://br2bkzxc-8000.inc1.devtunnels.ms",//Shabaz
   // baseUrl: "https://vx1wlxgw-8000.inc1.devtunnels.ms",// Noor
-  baseUrl: "https://h61zcd0b-8000.inc1.devtunnels.ms", // Manal
+  // baseUrl: "https://h61zcd0b-8000.inc1.devtunnels.ms", // Manal
 
 
 
