@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Fuel, Gauge, Settings2, ShieldCheck, Car, Bike, Shield } from 'lucide-react';
+import { MapPin, Fuel, Gauge, Settings2, ShieldCheck, Car, Bike, Shield, Share2, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const VehicleCard = ({ vehicle, onViewDetails }) => {
@@ -22,6 +22,26 @@ const VehicleCard = ({ vehicle, onViewDetails }) => {
           <div className="bg-background/95 backdrop-blur-sm px-2 py-0.5 rounded-md text-[10px] font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-1 border border-border/50">
             {isCar ? <Car size={10} /> : <Bike size={10} />} {vehicle.type}
           </div>
+        </div>
+
+        {/* Top Right Actions */}
+        <div className="absolute top-2 right-2 flex gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const url = `${window.location.origin}/listings/${vehicle.id}`;
+              const text = `Check out this ${vehicle.brand} ${vehicle.model} on SecondRide!\n\n${url}`;
+              window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            }}
+            className="bg-background/95 backdrop-blur-sm p-1.5 rounded-full text-foreground shadow-sm  transition-colors border border-border/50 focus-visible:outline-none"
+            title="Share on WhatsApp"
+          >
+            <Share2 size={14} />
+          </button>
+           <button className="bg-background/95 backdrop-blur-sm p-1.5 rounded-full text-foreground shadow-sm  transition-colors border border-border/50 focus-visible:outline-none"
+           title="Add to Favorites">
+            <Heart size={14} />
+          </button>
         </div>
       </div>
 
@@ -59,13 +79,9 @@ const VehicleCard = ({ vehicle, onViewDetails }) => {
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-2 mt-auto">
-          <button onClick={() => onViewDetails ? onViewDetails(vehicle.id) : navigate(`/listings/${vehicle.id}`)} className="flex-1 bg-background hover:bg-muted text-foreground border border-border py-1.5 rounded-lg font-medium transition-colors text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+          <button onClick={() => onViewDetails ? onViewDetails(vehicle.id) : navigate(`/listings/${vehicle.id}`)} className="w-full bg-foreground hover:bg-foreground/90 text-background py-1.5 rounded-lg font-medium transition-colors text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
             View Details
-          </button>
-          <button onClick={() => navigate('/login')} className="flex-1 bg-foreground hover:bg-foreground/90 text-background py-1.5 rounded-lg font-medium transition-colors text-xs shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-            Contact Owner
           </button>
         </div>
       </div>

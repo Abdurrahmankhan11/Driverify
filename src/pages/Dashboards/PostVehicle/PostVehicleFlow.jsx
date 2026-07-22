@@ -7,24 +7,28 @@ import Step3InteriorImages from './steps/Step3InteriorImages';
 import Step4Documents from './steps/Step4Documents';
 import Step5Review from './steps/Step5Review';
 
-const steps = [
-  { id: 1, title: 'Details' },
-  { id: 2, title: 'Exterior' },
-  { id: 3, title: 'Interior' },
-  { id: 4, title: 'Documents' },
-  { id: 5, title: 'Review' },
-];
+// Steps are generated dynamically now
 
 const PostVehicleFlow = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [listingId, setListingId] = useState(null);
   const [listingStatus, setListingStatus] = useState('');
   
   // To show details in the review step
   const [vehicleDetails, setVehicleDetails] = useState(null);
 
+  const steps = [
+    { id: 'details', title: 'Details' },
+    { id: 'exterior', title: 'Exterior' },
+    ...(!vehicleDetails || vehicleDetails?.vehicle_type_name === 'car' 
+        ? [{ id: 'interior', title: 'Interior' }] 
+        : []),
+    { id: 'documents', title: 'Documents' },
+    { id: 'review', title: 'Review' },
+  ];
+
   const handleNext = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+    setCurrentStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
   };
 
   const handleDetailsSubmitted = (data, createdListingId, status) => {
@@ -46,13 +50,13 @@ const PostVehicleFlow = () => {
         <div className="absolute top-1/2 left-0 w-full h-1 bg-muted -translate-y-1/2 z-0"></div>
         <div 
           className="absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-0 transition-all duration-300"
-          style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
+          style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
         ></div>
         
         <div className="relative z-10 flex justify-between">
-          {steps.map((step) => {
-            const isCompleted = step.id < currentStep;
-            const isCurrent = step.id === currentStep;
+          {steps.map((step, index) => {
+            const isCompleted = index < currentStepIndex;
+            const isCurrent = index === currentStepIndex;
             
             return (
               <div key={step.id} className="flex flex-col items-center">
@@ -64,7 +68,7 @@ const PostVehicleFlow = () => {
                     }
                   `}
                 >
-                  {isCompleted ? <Check className="w-4 h-4" /> : step.id}
+                  {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
                 </div>
                 <span className={`mt-2 text-xs font-medium ${isCurrent || isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
                   {step.title}
@@ -77,30 +81,30 @@ const PostVehicleFlow = () => {
 
       <Card>
         <CardContent className="p-6">
-          {currentStep === 1 && (
+          {steps[currentStepIndex].id === 'details' && (
             <Step1VehicleDetails 
               onSuccess={handleDetailsSubmitted} 
             />
           )}
-          {currentStep === 2 && (
+          {steps[currentStepIndex].id === 'exterior' && (
             <Step2ExteriorImages 
               listingId={listingId} 
               onNext={handleNext} 
             />
           )}
-          {currentStep === 3 && (
+          {steps[currentStepIndex].id === 'interior' && (
             <Step3InteriorImages 
               listingId={listingId} 
               onNext={handleNext} 
             />
           )}
-          {currentStep === 4 && (
+          {steps[currentStepIndex].id === 'documents' && (
             <Step4Documents 
               listingId={listingId} 
               onNext={handleNext} 
             />
           )}
-          {currentStep === 5 && (
+          {steps[currentStepIndex].id === 'review' && (
             <Step5Review 
               listingId={listingId} 
               vehicleDetails={vehicleDetails}

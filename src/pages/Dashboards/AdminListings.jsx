@@ -266,6 +266,28 @@ const AdminListings = () => {
         
         {/* Search & Filters */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+          {/* Filter Tabs (Vehicle Type Shortcut) */}
+          <div className="flex bg-muted p-1 rounded-lg w-full sm:w-auto overflow-x-auto no-scrollbar shrink-0 border border-border/50">
+            {[{ id: 'ALL', name: 'All' }, ...vehicleTypesList].map(type => {
+              const isSelected = type.id === 'ALL' ? filterType.length === 0 : filterType.includes(type.id);
+              return (
+                <button
+                  key={type.id}
+                  onClick={() => {
+                    setFilterType(type.id === 'ALL' ? [] : [type.id]);
+                    setPage(1);
+                  }}
+                  className={`flex-1 sm:flex-none whitespace-nowrap px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${isSelected
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                >
+                  {type.name === 'All' ? 'All' : type.name === 'Other' ? 'Others' : `${type.name}s`}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Search Input & Advanced Filters Toggle */}
           <div className="flex gap-2 w-full sm:w-auto">
             <div className="relative w-full sm:w-64 shrink-0">
