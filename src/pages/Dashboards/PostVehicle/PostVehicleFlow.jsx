@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '../../../components/ui/card';
-import { Check } from 'lucide-react';
+import { Check, FileText, Camera, Images, Clipboard, Eye } from 'lucide-react';
 import Step1VehicleDetails from './steps/Step1VehicleDetails';
 import Step2ExteriorImages from './steps/Step2ExteriorImages';
 import Step3InteriorImages from './steps/Step3InteriorImages';
 import Step4Documents from './steps/Step4Documents';
 import Step5Review from './steps/Step5Review';
 
-// Steps are generated dynamically now
+const steps = [
+  { id: 1, title: 'Details', icon: FileText },
+  { id: 2, title: 'Exterior', icon: Camera },
+  { id: 3, title: 'Interior', icon: Images },
+  { id: 4, title: 'Documents', icon: Clipboard },
+  { id: 5, title: 'Review', icon: Eye },
+];
 
 const PostVehicleFlow = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -17,15 +23,10 @@ const PostVehicleFlow = () => {
   // To show details in the review step
   const [vehicleDetails, setVehicleDetails] = useState(null);
 
-  const steps = [
-    { id: 'details', title: 'Details' },
-    { id: 'exterior', title: 'Exterior' },
-    ...(!vehicleDetails || vehicleDetails?.vehicle_type_name === 'car' 
-        ? [{ id: 'interior', title: 'Interior' }] 
-        : []),
-    { id: 'documents', title: 'Documents' },
-    { id: 'review', title: 'Review' },
-  ];
+  // Global drag-and-drop state
+  const [isGlobalDragging, setIsGlobalDragging] = useState(false);
+  const dragCounter = useRef(0);
+  const fileHandlerRef = useRef(null);
 
   const handleNext = () => {
     setCurrentStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
@@ -38,44 +39,142 @@ const PostVehicleFlow = () => {
     handleNext();
   };
 
+  // Register file handler callback (used by Step2 and Step3)
+  const registerFileHandler = (handler) => {
+    fileHandlerRef.current = handler;
+  };
+
+  // Global drag-and-drop handlers
+  useEffect(() => {
+    if (currentStep !== 2 && currentStep !== 3) return; // Only enable on image steps
+
+    const handleDragEnter = (e) => {
+      e.preventDefault();
+      dragCounter.current++;
+      
+      // Check if dragged items include files
+      if (e.dataTransfer.items) {
+        let hasFiles = false;
+        for (let i = 0; i < e.dataTransfer.items.length; i++) {
+          if (e.dataTransfer.items[i].kind === 'file') {
+            hasFiles = true;
+            break;
+          }
+        }
+        if (hasFiles) {
+          setIsGlobalDragging(true);
+        }
+      }
+    };
+
+    const handleDragOver = (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+    };
+
+    const handleDragLeave = (e) => {
+      e.preventDefault();
+      dragCounter.current--;
+      if (dragCounter.current === 0) {
+        setIsGlobalDragging(false);
+      }
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      dragCounter.current = 0;
+      setIsGlobalDragging(false);
+
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const files = Array.from(e.dataTransfer.files);
+        // Filter for image files only
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        
+        if (imageFiles.length > 0 && fileHandlerRef.current) {
+          fileHandlerRef.current(imageFiles);
+        }
+      }
+    };
+
+    document.addEventListener('dragenter', handleDragEnter);
+    document.addEventListener('dragover', handleDragOver);
+    document.addEventListener('dragleave', handleDragLeave);
+    document.addEventListener('drop', handleDrop);
+
+    return () => {
+      document.removeEventListener('dragenter', handleDragEnter);
+      document.removeEventListener('dragover', handleDragOver);
+      document.removeEventListener('dragleave', handleDragLeave);
+      document.removeEventListener('drop', handleDrop);
+    };
+  }, [currentStep]);
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Global Drop Overlay */}
+      {isGlobalDragging && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center pointer-events-none">
+          <div className="bg-primary text-primary-foreground px-8 py-6 rounded-lg shadow-xl text-center">
+            <p className="text-lg font-semibold">Drop images here to upload</p>
+            <p className="text-sm mt-2 opacity-90">Release to add images to your listing</p>
+          </div>
+        </div>
+      )}
+
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Post a Vehicle</h1>
         <p className="text-muted-foreground">Fill in the details to list your vehicle on SecondRide.</p>
       </div>
 
       {/* Stepper UI */}
-      <div className="relative mb-8">
-        <div className="absolute top-1/2 left-0 w-full h-1 bg-muted -translate-y-1/2 z-0"></div>
-        <div 
-          className="absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-0 transition-all duration-300"
-          style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
-        ></div>
-        
-        <div className="relative z-10 flex justify-between">
-          {steps.map((step, index) => {
-            const isCompleted = index < currentStepIndex;
-            const isCurrent = index === currentStepIndex;
-            
-            return (
-              <div key={step.id} className="flex flex-col items-center">
-                <div 
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm transition-colors
-                    ${isCompleted ? 'bg-primary text-primary-foreground' : 
-                      isCurrent ? 'bg-primary text-primary-foreground ring-4 ring-primary/20' : 
-                      'bg-muted text-muted-foreground border-2 border-border'
-                    }
-                  `}
-                >
-                  {isCompleted ? <Check className="w-4 h-4" /> : index + 1}
+      <div className="mb-12 px-4">
+        <div className="relative flex items-start justify-between">
+          {/* Background Line */}
+          <div className="absolute top-5 left-0 right-0 h-1 bg-muted z-0"></div>
+          
+          {/* Progress Line */}
+          <div 
+            className="absolute top-5 left-0 h-1 bg-primary z-0 transition-all duration-500"
+            style={{ width: `calc(${((currentStep - 1) / (steps.length - 1)) * 100}% + 20px)` }}
+          ></div>
+          
+          {/* Steps Container */}
+          <div className="relative z-10 flex w-full justify-between">
+            {steps.map((step, index) => {
+              const isCompleted = step.id < currentStep;
+              const isCurrent = step.id === currentStep;
+              const IconComponent = step.icon;
+              
+              return (
+                <div key={step.id} className="flex flex-col items-center w-full">
+                  {/* Circle */}
+                  <div 
+                    className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold text-lg transition-all duration-300 border-2 ${
+                      isCompleted 
+                        ? 'bg-primary border-primary text-white shadow-md' 
+                        : isCurrent 
+                        ? 'bg-primary border-primary text-white shadow-lg scale-110' 
+                        : 'bg-muted border-muted text-muted-foreground'
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <Check className="w-6 h-6" />
+                    ) : (
+                      <IconComponent className="w-6 h-6" />
+                    )}
+                  </div>
+                  
+                  {/* Label */}
+                  <span className={`mt-3 text-sm font-semibold text-center transition-colors ${
+                    isCurrent || isCompleted 
+                      ? 'text-foreground' 
+                      : 'text-gray-500'
+                  }`}>
+                    {step.title}
+                  </span>
                 </div>
-                <span className={`mt-2 text-xs font-medium ${isCurrent || isCompleted ? 'text-foreground' : 'text-muted-foreground'}`}>
-                  {step.title}
-                </span>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -89,13 +188,15 @@ const PostVehicleFlow = () => {
           {steps[currentStepIndex].id === 'exterior' && (
             <Step2ExteriorImages 
               listingId={listingId} 
-              onNext={handleNext} 
+              onNext={handleNext}
+              onRegisterFileHandler={registerFileHandler}
             />
           )}
           {steps[currentStepIndex].id === 'interior' && (
             <Step3InteriorImages 
               listingId={listingId} 
-              onNext={handleNext} 
+              onNext={handleNext}
+              onRegisterFileHandler={registerFileHandler}
             />
           )}
           {steps[currentStepIndex].id === 'documents' && (

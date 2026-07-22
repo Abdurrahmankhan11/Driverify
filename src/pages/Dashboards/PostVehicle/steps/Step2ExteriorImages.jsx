@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../../../../components/ui/button';
 import { vehicleService } from '../../../../services/api';
 import ImageUploadBox from '../../../../components/common/ImageUploadBox';
 
-const Step2ExteriorImages = ({ listingId, onNext }) => {
+const Step2ExteriorImages = ({ listingId, onNext, onRegisterFileHandler }) => {
   const [files, setFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
   const [uploadStatus, setUploadStatus] = useState({});
@@ -12,6 +12,13 @@ const Step2ExteriorImages = ({ listingId, onNext }) => {
   const [totalUploaded, setTotalUploaded] = useState(0);
 
   const MIN_REQUIRED = 8;
+
+  // Register this component's file handler with the parent
+  useEffect(() => {
+    if (onRegisterFileHandler) {
+      onRegisterFileHandler(handleFileSelect);
+    }
+  }, [onRegisterFileHandler]);
 
   const handleFileSelect = (newFiles) => {
     // Filter out already selected files by name/size to avoid duplicates
@@ -33,7 +40,11 @@ const Step2ExteriorImages = ({ listingId, onNext }) => {
       return uploadStatus[fileKey] !== 'success';
     });
 
-    if (pendingFiles.length === 0) return;
+    if (pendingFiles.length === 0) {
+      // No pending files, proceed to next step
+      onNext();
+      return;
+    }
 
     setIsUploading(true);
     setApiMessage('');
@@ -84,7 +95,31 @@ const Step2ExteriorImages = ({ listingId, onNext }) => {
     setIsUploading(false);
   };
 
-  const isComplete = totalUploaded >= MIN_REQUIRED;
+  // After upload completes, check if we should proceed
+  useEffect(() => {
+    if (!isUploading && totalUploaded >= MIN_REQUIRED && files.length > 0) {
+      const pendingFiles = files.filter((file) => {
+        const fileKey = file.name + file.lastModified;
+        return uploadStatus[fileKey] !== 'success';
+      });
+      
+      // If all files are uploaded successfully, proceed to next step
+      if (pendingFiles.length === 0) {
+        // Wait a moment before proceeding
+        setTimeout(() => {
+          onNext();
+        }, 500);
+      }
+    }
+  }, [isUploading, totalUploaded, files, uploadStatus, MIN_REQUIRED, onNext]);
+
+  const pendingFilesCount = files.filter((file) => {
+    const fileKey = file.name + file.lastModified;
+    return uploadStatus[fileKey] !== 'success';
+  }).length;
+
+  const hasFilesReady = files.length > 0 && pendingFilesCount > 0;
+  const isComplete = totalUploaded >= MIN_REQUIRED && pendingFilesCount === 0;
 
   return (
     <div className="space-y-6">
@@ -112,23 +147,14 @@ const Step2ExteriorImages = ({ listingId, onNext }) => {
         multiple={true}
       />
 
-      <div className="pt-4 flex justify-between border-t border-border mt-6">
+      <div className="pt-4 flex justify-end border-t border-border mt-6">
         <Button 
           type="button" 
-          variant="outline"
           onClick={uploadImages}
-          disabled={isUploading || files.length === 0 || files.every(f => uploadStatus[f.name + f.lastModified] === 'success')}
-        >
-          {isUploading ? 'Uploading...' : 'Upload Selected Images'}
-        </Button>
-        
-        <Button 
-          type="button" 
-          onClick={onNext}
-          disabled={!isComplete || isUploading}
+          disabled={!hasFilesReady && !isComplete || isUploading}
           className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
-          Next: Interior Images
+          {isUploading ? 'Uploading...' : hasFilesReady ? 'Upload & Next' : 'Next: Interior Images'}
         </Button>
       </div>
     </div>

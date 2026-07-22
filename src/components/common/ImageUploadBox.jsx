@@ -18,12 +18,20 @@ const ImageUploadBox = ({
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
   const handleDragOver = (e) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
+  const handleDragLeave = (e) => {
+    if (e.currentTarget.contains(e.relatedTarget)) {
+      return;
+    }
     setIsDragging(false);
   };
 
@@ -64,6 +72,7 @@ const ImageUploadBox = ({
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
           isDragging ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
         }`}
+        onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
