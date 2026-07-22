@@ -188,8 +188,8 @@ const DashboardFeaturedVehicles = () => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        params.append('page', page);
-        params.append('page_size', 12);
+        params.append('page', 1);
+        params.append('page_size', 1000);
 
         if (debouncedSearch) params.append('search', debouncedSearch);
         if (filterType.length > 0) params.append('vehicle_type_id', filterType.join(','));
@@ -473,30 +473,6 @@ const DashboardFeaturedVehicles = () => {
             ))}
           </div>
 
-          {/* Pagination Controls */}
-          {(hasPrev || hasNext || totalPages > 1) && (
-            <div className="mt-10 flex items-center justify-between border-t border-border/60 pt-6">
-              <div className="text-sm text-muted-foreground">
-                Page <span className="font-medium text-foreground">{page}</span> of <span className="font-medium text-foreground">{totalPages || 1}</span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={!hasPrev || page === 1}
-                  className="px-4 py-2 rounded-md border border-border/60 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition-colors"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => setPage(p => p + 1)}
-                  disabled={!hasNext || page >= totalPages}
-                  className="px-4 py-2 rounded-md border border-border/60 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition-colors"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
         </>
       ) : (
         <div className="flex flex-col items-center justify-center text-center py-24 bg-card rounded-2xl border border-dashed border-border/60 shadow-sm">

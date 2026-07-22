@@ -187,8 +187,8 @@ const AdminListings = () => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        params.append('page', page);
-        params.append('page_size', 12);
+        params.append('page', 1);
+        params.append('page_size', 1000);
         
         if (debouncedSearch) params.append('search', debouncedSearch);
         
@@ -436,7 +436,7 @@ const AdminListings = () => {
         </div>
       ) : listings.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {listings.map((car) => {
               const displayImage = car.images?.find(img => img.image_type?.toLowerCase() === 'exterior' || img.image_type?.toLowerCase() === 'front')?.image_url || car.images?.[0]?.image_url;
               return (
@@ -489,30 +489,6 @@ const AdminListings = () => {
             })}
           </div>
 
-          {/* Pagination Controls */}
-          {(hasPrev || hasNext || totalPages > 1) && (
-            <div className="mt-10 flex items-center justify-between border-t border-border/60 pt-6">
-              <div className="text-sm text-muted-foreground">
-                Page <span className="font-medium text-foreground">{page}</span> of <span className="font-medium text-foreground">{totalPages || 1}</span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={!hasPrev || page === 1}
-                  className="px-4 py-2 rounded-md border border-border/60 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition-colors"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => setPage(p => p + 1)}
-                  disabled={!hasNext || page >= totalPages}
-                  className="px-4 py-2 rounded-md border border-border/60 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted transition-colors"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
         </>
       ) : (
         <div className="col-span-full py-16 text-center border-2 border-dashed border-border rounded-2xl bg-card">
