@@ -253,4 +253,32 @@ export const adminService = {
   },
 };
 
+export const paymentService = {
+  createOrder: async (listingId, paymentType = 'CONTACT_REVEAL') => {
+    const res = await api.post('/p/create-order/', {
+      listing_id: listingId,
+      payment_type: paymentType,
+    });
+    return res.data;
+  },
+  verifyPayment: async (orderId, paymentId, signature) => {
+    const res = await api.post('/p/verify/', {
+      order_id: orderId,
+      payment_id: paymentId,
+      signature: signature,
+    });
+    return res.data;
+  },
+  cancelOrder: async (orderId) => {
+    const res = await api.post('/p/cancel/', {
+      order_id: orderId,
+    });
+    return res.data;
+  },
+  getContact: async (listingId) => {
+    const res = await api.get(`/p/listings/${listingId}/contact/`);
+    return res.data;
+  },
+};
+
 export default api;

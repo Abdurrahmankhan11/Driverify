@@ -1,7 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { vehicleService } from '../services/api';
-import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight } from 'lucide-react';
+import { vehicleService, paymentService } from '../services/api';
+import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight, Lock, Unlock, AlertCircle } from 'lucide-react';
+
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 const VehicleDetails = () => {
   const { id } = useParams();
@@ -11,11 +25,31 @@ const VehicleDetails = () => {
   const [error, setError] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
 
+  // Payment State
+  const [contactState, setContactState] = useState('LOCKED'); // LOCKED, PAYING, VERIFYING, UNLOCKED, FAILED
+  const [paymentOrder, setPaymentOrder] = useState(null);
+
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         setLoading(true);
         const data = await vehicleService.getListing(id);
+        
+        // If not the owner (no seller_phone by default), try to see if user already paid
+        if (!data.seller_phone && localStorage.getItem('accessToken')) {
+          try {
+            const contactData = await paymentService.getContact(id);
+            data.seller_phone = contactData.phone;
+            data.seller_name = contactData.seller_name || data.seller_name;
+            setContactState('UNLOCKED');
+          } catch (err) {
+            // Expected 402 if not paid
+            setContactState('LOCKED');
+          }
+        } else if (data.seller_phone) {
+          setContactState('UNLOCKED');
+        }
+
         setVehicle(data);
       } catch (err) {
         console.error('Error fetching vehicle details:', err);
@@ -29,6 +63,108 @@ const VehicleDetails = () => {
       fetchDetails();
     }
   }, [id]);
+
+  const fetchContact = async () => {
+    try {
+      setContactState('VERIFYING');
+      const contactData = await paymentService.getContact(id);
+      setVehicle(prev => ({ 
+        ...prev, 
+        seller_phone: contactData.phone, 
+        seller_name: contactData.seller_name || prev.seller_name 
+      }));
+      setContactState('UNLOCKED');
+    } catch (err) {
+      console.error('Error fetching contact:', err);
+      // If it fails because of 402, it stays locked. Otherwise maybe show error.
+      setContactState('LOCKED');
+    }
+  };
+
+  const handleRevealContact = async () => {
+    try {
+      setContactState('PAYING');
+      const orderData = await paymentService.createOrder(id, 'CONTACT_REVEAL');
+      
+      if (orderData.already_paid) {
+        fetchContact();
+      } else {
+        setPaymentOrder(orderData);
+        openRazorpay(orderData);
+      }
+    } catch (err) {
+      console.error('Error creating order:', err);
+      setContactState('FAILED');
+    }
+  };
+
+  const openRazorpay = async (order) => {
+    const isLoaded = await loadRazorpayScript();
+    
+    if (!isLoaded) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      setContactState('FAILED');
+      return;
+    }
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TGrPHY1I2Bmd6Q',
+      amount: parseFloat(order.amount) * 100, // amount in paisa
+      currency: order.currency || "INR",
+      name: "Second Ride",
+      description: "Contact Reveal Payment",
+      order_id: order.order_id,
+      handler: function (response) {
+        handlePaymentSuccess(response, order);
+      },
+      theme: {
+        color: "#0f172a", // Match your brand primary color
+      },
+      modal: {
+        ondismiss: function () {
+          handlePaymentCancel(order.order_id);
+        }
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.on('payment.failed', function (response) {
+      console.error('Payment failed:', response.error);
+      setContactState('FAILED');
+    });
+    paymentObject.open();
+  };
+
+  const handlePaymentSuccess = async (paymentData, order) => {
+    setContactState('VERIFYING');
+    try {
+      const res = await paymentService.verifyPayment(
+        order.order_id,
+        paymentData.razorpay_payment_id,
+        paymentData.razorpay_signature
+      );
+      
+      if (res.payment_status === 'SUCCESS') {
+        fetchContact();
+      } else {
+        setContactState('FAILED');
+      }
+    } catch (err) {
+      console.error('Error verifying payment:', err);
+      setContactState('FAILED');
+    }
+  };
+
+  const handlePaymentCancel = async (orderId) => {
+    setContactState('LOCKED');
+    if (orderId) {
+      try {
+        await paymentService.cancelOrder(orderId);
+      } catch (err) {
+        console.error('Error cancelling order:', err);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -169,7 +305,7 @@ const VehicleDetails = () => {
                       <CheckCircle size={14} className="text-green-500" /> {vehicle.status}
                     </span>
                   </li>
-                  {vehicle.seller_phone && (
+                  {(contactState === 'UNLOCKED' || vehicle.seller_phone) && (
                     <li className="flex items-start justify-between">
                       <span className="text-muted-foreground">Seller Phone</span>
                       <span className="font-semibold text-foreground">{vehicle.seller_phone}</span>
@@ -188,9 +324,37 @@ const VehicleDetails = () => {
               )}
               
               <div className="mt-auto pt-4 border-t border-border">
-                <button className="w-full bg-foreground hover:bg-foreground/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base">
-                  <Phone size={18} /> Contact Seller
-                </button>
+                {contactState === 'UNLOCKED' || vehicle.seller_phone ? (
+                  <div className="flex gap-2">
+                    <a href={`tel:${vehicle.seller_phone}`} className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base">
+                      <Phone size={18} /> Call {vehicle.seller_name ? vehicle.seller_name.split(' ')[0] : 'Seller'}
+                    </a>
+                    <a href={`https://wa.me/91${vehicle.seller_phone?.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="flex-1 bg-[#25D366] hover:bg-[#1ebd5b] text-white py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base">
+                      WhatsApp
+                    </a>
+                  </div>
+                ) : contactState === 'FAILED' ? (
+                  <div className="space-y-2">
+                    <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg border border-destructive/20 text-center flex items-center justify-center gap-2">
+                      <AlertCircle size={16} /> Payment failed
+                    </div>
+                    <button onClick={handleRevealContact} className="w-full bg-foreground hover:bg-foreground/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base">
+                      Retry Payment
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    onClick={handleRevealContact}
+                    disabled={contactState === 'PAYING' || contactState === 'VERIFYING'}
+                    className="w-full bg-foreground hover:bg-foreground/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {contactState === 'PAYING' || contactState === 'VERIFYING' ? (
+                      <><Loader2 size={18} className="animate-spin" /> {contactState === 'PAYING' ? 'Processing...' : 'Verifying...'}</>
+                    ) : (
+                      <><Lock size={18} /> Reveal Contact - ₹10</>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>
