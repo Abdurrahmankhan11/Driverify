@@ -10,9 +10,10 @@ import {
   ArrowLeft,
   Save,
   X,
+  Phone,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { authService } from '../../services/api';
+import { useAuth } from '../../../context/AuthContext';
+import { authService } from '../../../services/api';
 
 const UpdateProfile = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const UpdateProfile = () => {
     city: '',
     address: '',
     pincode: '',
+    phone: '',
   });
 
   const [countriesList, setCountriesList] = useState([]);
@@ -65,6 +67,7 @@ const UpdateProfile = () => {
           city: cityId,
           address: user.address || '',
           pincode: user.pincode || '',
+          phone: user.phone || '',
         });
 
         const countryObj = countriesList.find(
@@ -177,6 +180,12 @@ const UpdateProfile = () => {
       return;
     }
 
+    if (name === 'phone') {
+      const sanitized = value.replace(/\D/g, '').slice(0, 10);
+      setFormData((prev) => ({ ...prev, [name]: sanitized }));
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -194,6 +203,12 @@ const UpdateProfile = () => {
       tempErrors.pincode = 'Pincode is required';
     } else if (formData.pincode.length !== 6) {
       tempErrors.pincode = 'Pincode must be exactly 6 digits';
+    }
+
+    if (!formData.phone) {
+      tempErrors.phone = 'Phone number is required';
+    } else if (!/^[6-9]\d{9}$/.test(formData.phone)) {
+      tempErrors.phone = 'Please enter a valid 10-digit Indian mobile number';
     }
 
     setErrors(tempErrors);
@@ -216,6 +231,7 @@ const UpdateProfile = () => {
       city: formData.city,
       address: formData.address.trim(),
       pincode: formData.pincode,
+      phone: formData.phone,
     };
 
     try {
@@ -349,6 +365,49 @@ const UpdateProfile = () => {
             {errors.full_name && (
               <p className="mt-1.5 text-xs text-red-600 font-semibold">
                 {errors.full_name}
+              </p>
+            )}
+          </div>
+
+          {/* Phone Number */}
+          <div>
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
+              Phone Number
+            </label>
+
+            <div
+              className={`flex items-center rounded-xl border ${
+                errors.phone
+                  ? 'border-destructive ring-2 ring-destructive/20'
+                  : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+              } bg-background transition-all duration-200 overflow-hidden`}
+            >
+              <div className="pl-4 pr-1 text-muted-foreground">
+                <Phone size={18} />
+              </div>
+
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                inputMode="numeric"
+                placeholder="Enter 10-digit mobile number"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-3 py-3.5 text-foreground text-sm font-medium placeholder:text-muted-foreground placeholder:font-normal focus:outline-none bg-transparent"
+              />
+            </div>
+            
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              10-digit mobile number, no country code
+            </p>
+
+            {errors.phone && (
+              <p className="mt-1.5 text-xs text-red-600 font-semibold">
+                {errors.phone}
               </p>
             )}
           </div>

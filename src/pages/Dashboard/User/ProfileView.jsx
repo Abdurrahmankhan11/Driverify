@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, MapPin, Home, Hash, ShieldCheck } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { authService } from '../../services/api';
+import { User, MapPin, Home, Hash, ShieldCheck, Phone } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
+import { authService } from '../../../services/api';
 
 const ProfileView = () => {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const ProfileView = () => {
     city: '',
     address: '',
     pincode: '',
+    phone: '',
   });
 
   const [countriesList, setCountriesList] = useState([]);
@@ -51,6 +52,7 @@ const ProfileView = () => {
           city: cityId,
           address: user.address || '',
           pincode: user.pincode || '',
+          phone: user.phone || '',
         });
 
         const countryObj = countriesList.find(
@@ -156,6 +158,21 @@ const ProfileView = () => {
                 </div>
                 <div className="w-full px-2 py-2 text-foreground text-sm font-medium">
                   {formData.full_name || <span className="text-muted-foreground">Not set</span>}
+                </div>
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1.5">
+                Phone Number
+              </label>
+              <div className="flex items-center rounded-xl border border-border bg-background overflow-hidden">
+                <div className="pl-3 pr-1 text-muted-foreground">
+                  <Phone size={16} />
+                </div>
+                <div className="w-full px-2 py-2 text-foreground text-sm font-medium">
+                  {formData.phone || <span className="text-muted-foreground">Not set</span>}
                 </div>
               </div>
             </div>

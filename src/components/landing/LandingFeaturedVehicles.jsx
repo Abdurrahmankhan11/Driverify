@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import VehicleCard from '../vehicles/VehicleCard';
+import VehicleCard from '../vehicle/VehicleCard';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';

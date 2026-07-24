@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { useAuth } from '../../../context/AuthContext';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Briefcase, ClipboardCheck, Users } from 'lucide-react';
 
 const MiddlemanDashboard = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import CarCard from '../vehicles/CarCard';
+import CarCard from '../vehicle/CarCard';
 
 const dummyCars = [
   {

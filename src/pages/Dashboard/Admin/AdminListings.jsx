@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
+import { Card, CardContent } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
+import { Badge } from '../../../components/ui/badge';
 import { Car, IndianRupee, Loader2, Search, Filter, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
-import { vehicleService } from '../../services/api';
-import { Input } from '../../components/ui/input';
+import { vehicleService } from '../../../services/api';
+import { Input } from '../../../components/ui/input';
 import { 
   DropdownMenu, 
   DropdownMenuTrigger, 
@@ -12,7 +13,7 @@ import {
   DropdownMenuCheckboxItem, 
   DropdownMenuRadioGroup, 
   DropdownMenuRadioItem 
-} from '../../components/ui/dropdown-menu';
+} from '../../../components/ui/dropdown-menu';
 
 const MultiSelectDropdown = ({ title, options, selected, onChange, disabled }) => {
   const toggle = (id) => {
