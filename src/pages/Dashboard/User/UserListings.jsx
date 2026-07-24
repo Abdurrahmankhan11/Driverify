@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
+import { Card, CardContent } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
 import { Car, Plus, IndianRupee, Loader2, Eye, Edit, X, Save } from 'lucide-react';
-import { vehicleService } from '../../services/api';
-import { Input } from '../../components/ui/input';
+import { vehicleService } from '../../../services/api';
+import { Input } from '../../../components/ui/input';
 
 const UserListings = () => {
   const navigate = useNavigate();

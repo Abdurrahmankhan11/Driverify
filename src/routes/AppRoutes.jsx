@@ -13,16 +13,16 @@ import VerifyOTP from '../pages/Auth/VerifyOTP';
 import CompleteProfile from '../pages/Auth/CompleteProfile';
 
 // Dashboards
-import UserDashboard from '../pages/Dashboards/UserDashboard.jsx';
-import UserListings from '../pages/Dashboards/UserListings.jsx';
-import ProfileView from '../pages/Dashboards/ProfileView.jsx';
-import UpdateProfile from '../pages/Dashboards/UpdateProfile.jsx';
-import MiddlemanDashboard from '../pages/Dashboards/MiddlemanDashboard.jsx';
-import AdminDashboard from '../pages/Dashboards/AdminDashboard.jsx';
-import AdminUserList from '../pages/Dashboards/AdminUserList.jsx';
-import AdminUserDetail from '../pages/Dashboards/AdminUserDetail.jsx';
-import AdminListings from '../pages/Dashboards/AdminListings.jsx';
-import PostVehicleFlow from '../pages/Dashboards/PostVehicle/PostVehicleFlow.jsx';
+import UserDashboard from '../pages/Dashboard/User/UserDashboard.jsx';
+import UserListings from '../pages/Dashboard/User/UserListings.jsx';
+import ProfileView from '../pages/Dashboard/User/ProfileView.jsx';
+import UpdateProfile from '../pages/Dashboard/User/UpdateProfile.jsx';
+import MiddlemanDashboard from '../pages/Dashboard/Middleman/MiddlemanDashboard.jsx';
+import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard.jsx';
+import AdminUserList from '../pages/Dashboard/Admin/AdminUserList.jsx';
+import AdminUserDetail from '../pages/Dashboard/Admin/AdminUserDetail.jsx';
+import AdminListings from '../pages/Dashboard/Admin/AdminListings.jsx';
+import PostVehicleFlow from '../pages/Dashboard/PostVehicle/PostVehicleFlow.jsx';
 
 // Shared / Other
 import VehicleDetails from '../pages/VehicleDetails.jsx';

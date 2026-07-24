@@ -36,16 +36,19 @@ const VehicleDetails = () => {
         setLoading(true);
         const data = await vehicleService.getListing(id);
 
-        // If not the owner (no seller_phone by default), try to see if user already paid
-        if (!data.seller_phone && localStorage.getItem('accessToken')) {
+        if (localStorage.getItem('accessToken')) {
           try {
             const contactData = await paymentService.getContact(id);
             data.seller_phone = contactData.phone;
-            data.seller_name = contactData.seller_name || data.seller_name;
+            data.seller_name = contactData.seller_name;
             setContactState('UNLOCKED');
           } catch (err) {
             // Expected 402 if not paid
-            setContactState('LOCKED');
+            if (data.seller_phone) {
+              setContactState('UNLOCKED');
+            } else {
+              setContactState('LOCKED');
+            }
           }
         } else if (data.seller_phone) {
           setContactState('UNLOCKED');
@@ -95,7 +98,12 @@ const VehicleDetails = () => {
       }
     } catch (err) {
       console.error('Error creating order:', err);
-      setContactState('FAILED');
+      if (err.response?.status === 403) {
+        alert(err.response.data.detail || 'Please complete your profile before proceeding.');
+        setContactState('LOCKED');
+      } else {
+        setContactState('FAILED');
+      }
     }
   };
 
@@ -260,7 +268,7 @@ const VehicleDetails = () => {
 
           {/* Right Column - Details */}
           <div className="space-y-4">
-            <div className="bg-card rounded-2xl p-5 border border-border shadow-sm flex flex-col h-full max-h-[75vh] overflow-y-auto hide-scrollbar">
+            <div className="bg-card rounded-2xl p-5 border border-border shadow-sm flex flex-col h-full">
               <div className="mb-4">
                 <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
                   {vehicle.brand} {vehicle.model} <span className="text-muted-foreground font-medium text-lg">{vehicle.variant}</span>
@@ -314,13 +322,13 @@ const VehicleDetails = () => {
                   </li>
                   {(contactState === 'UNLOCKED' || vehicle.seller_phone) && (
                     <div>
-                      <li className="flex items-start justify-between">
-                        <span className="text-muted-foreground">Seller Phone</span>
-                        <span className="font-semibold text-foreground">{vehicle.seller_phone}</span>
+                      <li className="flex items-start justify-between ">
+                        <span className="text-muted-foreground">Seller Name</span>
+                        <span className="font-semibold text-foreground">{vehicle.seller_name || 'Not Provided'}</span>
                       </li>
                       <li className="flex items-start justify-between pt-1">
-                        <span className="text-muted-foreground">Seller Name</span>
-                        <span className="font-semibold text-foreground">{vehicle.seller_name}</span>
+                        <span className="text-muted-foreground">Seller Phone</span>
+                        <span className="font-semibold text-foreground">{vehicle.seller_phone || 'Not Provided'}</span>
                       </li>
                     </div>
                   )}
@@ -382,7 +390,7 @@ const VehicleDetails = () => {
                     {contactState === 'PAYING' || contactState === 'VERIFYING' ? (
                       <><Loader2 size={18} className="animate-spin" /> {contactState === 'PAYING' ? 'Processing...' : 'Verifying...'}</>
                     ) : (
-                      <><Lock size={18} /> Reveal Contact - ₹10</>
+                      <><Lock size={18} /> Reveal Contact</>
                     )}
                   </button>
                 )}

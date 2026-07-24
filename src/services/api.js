@@ -93,6 +93,10 @@ export const authService = {
     const res = await api.post('/auth/otp/verify/', { identifier, channel, otp_code: otpCode });
     return res.data;
   },
+  logout: async (refreshToken) => {
+    const res = await api.post('/auth/logout/', { refresh: refreshToken });
+    return res.data;
+  },
   getProfile: async () => {
     const res = await api.get('/auth/profile/');
     return res.data;

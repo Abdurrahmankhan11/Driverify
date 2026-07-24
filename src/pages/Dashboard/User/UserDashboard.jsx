@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAuth } from '../../context/AuthContext';
-import DashboardFeaturedVehicles from '../../components/landing/DashboardFeaturedVehicles';
+import { useAuth } from '../../../context/AuthContext';
+import DashboardFeaturedVehicles from '../../../components/landing/DashboardFeaturedVehicles';
 
 const UserDashboard = () => {
   const { user } = useAuth();
