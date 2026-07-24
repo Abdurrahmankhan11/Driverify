@@ -13,6 +13,12 @@ export const SIDEBAR_CONFIG = {
         { label: 'List Vehicle', path: '/dashboard/user/post-vehicle', icon: 'Plus' },
       ]
     },
+     {
+      section: 'Services',
+      items: [
+        { label: 'Middleman Services', path: '/dashboard/middleman/deals', icon: 'Briefcase' },
+      ]
+    },
     {
       section: 'Account',
       items: [
