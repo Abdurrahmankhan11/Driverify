@@ -11,12 +11,13 @@ export const SIDEBAR_CONFIG = {
       items: [
         { label: 'My Listings', path: '/dashboard/user/listings', icon: 'Car' },
         { label: 'List Vehicle', path: '/dashboard/user/post-vehicle', icon: 'Plus' },
+        { label: 'Wishlist', path: '/dashboard/user/wishlist', icon: 'Heart' },
       ]
     },
      {
       section: 'Services',
       items: [
-        { label: 'Middleman Services', path: '/dashboard/middleman/deals', icon: 'Briefcase' },
+        { label: 'Middleman Services', path: '/dashboard/user/middleman-services', icon: 'Handshake' },
       ]
     },
     {
