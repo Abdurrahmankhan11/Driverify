@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { vehicleService, paymentService } from '../services/api';
-import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight, Lock, Unlock, AlertCircle, Briefcase } from 'lucide-react';
+import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight, Lock, Unlock, AlertCircle, Handshake, Share2, Heart } from 'lucide-react';
 import { FaWhatsapp } from "react-icons/fa";
 
 const loadRazorpayScript = () => {
@@ -232,6 +232,25 @@ const VehicleDetails = () => {
               <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-2 border border-border/50">
                 <Car size={16} /> {vehicle.vehicle_type || 'Car'}
               </div>
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button
+                  onClick={() => {
+                    const url = window.location.href;
+                    const text = `Check out this ${vehicle.brand} ${vehicle.model} on SecondRide!\n\n${url}`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                  }}
+                  className="bg-background/90 backdrop-blur-sm p-2 rounded-full text-foreground shadow-sm hover:bg-background transition-colors border border-border/50 focus-visible:outline-none"
+                  title="Share on WhatsApp"
+                >
+                  <Share2 size={18} />
+                </button>
+                <button
+                  className="bg-background/90 backdrop-blur-sm p-2 rounded-full text-foreground shadow-sm hover:bg-background transition-colors border border-border/50 focus-visible:outline-none"
+                  title="Add to Wishlist"
+                >
+                  <Heart size={18} />
+                </button>
+              </div>
               {images.length > 1 && (
                 <>
                   <button
@@ -302,9 +321,10 @@ const VehicleDetails = () => {
               </div>
 
               <button
+                onClick={() => navigate('/dashboard/user/middleman-services')}
                 className="w-full bg-primary hover:bg-primary/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <Briefcase size={16} />  Hire a Middleman
+                <Handshake size={16} />  Hire a Middleman
               </button>
 
               <div className="mb-4 pt-2">

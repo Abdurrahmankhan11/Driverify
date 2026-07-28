@@ -15,6 +15,8 @@ import CompleteProfile from '../pages/Auth/CompleteProfile';
 // Dashboards
 import UserDashboard from '../pages/Dashboard/User/UserDashboard.jsx';
 import UserListings from '../pages/Dashboard/User/UserListings.jsx';
+import UserWishlist from '../pages/Dashboard/User/UserWishlist.jsx';
+import MiddlemanServices from '../pages/Dashboard/User/MiddlemanServices.jsx';
 import ProfileView from '../pages/Dashboard/User/ProfileView.jsx';
 import UpdateProfile from '../pages/Dashboard/User/UpdateProfile.jsx';
 import MiddlemanDashboard from '../pages/Dashboard/Middleman/MiddlemanDashboard.jsx';
@@ -47,6 +49,8 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={['USER']} />}>
             <Route path="user" element={<UserDashboard />} />
             <Route path="user/listings" element={<UserListings />} />
+            <Route path="user/wishlist" element={<UserWishlist />} />
+            <Route path="user/middleman-services" element={<MiddlemanServices />} />
             <Route path="user/vehicle/:id" element={<VehicleDetails />} />
             <Route path="user/listings/:id" element={<VehicleDetails />} />
             <Route path="user/post-vehicle" element={<PostVehicleFlow />} />
