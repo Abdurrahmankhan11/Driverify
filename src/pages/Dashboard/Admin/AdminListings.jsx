@@ -3,16 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
-import { Car, IndianRupee, Loader2, Search, Filter, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
+import { Car, IndianRupee, Loader2, Search, Filter, ChevronDown, SlidersHorizontal, X, Star } from 'lucide-react';
 import { vehicleService } from '../../../services/api';
 import { Input } from '../../../components/ui/input';
-import { 
-  DropdownMenu, 
-  DropdownMenuTrigger, 
-  DropdownMenuContent, 
-  DropdownMenuCheckboxItem, 
-  DropdownMenuRadioGroup, 
-  DropdownMenuRadioItem 
+import { Switch } from '../../../components/ui/switch';
+import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem
 } from '../../../components/ui/dropdown-menu';
 
 const MultiSelectDropdown = ({ title, options, selected, onChange, disabled }) => {
@@ -24,8 +26,8 @@ const MultiSelectDropdown = ({ title, options, selected, onChange, disabled }) =
     }
   };
 
-  const displayText = selected.length === 0 
-    ? `Any ${title}` 
+  const displayText = selected.length === 0
+    ? `Any ${title}`
     : options.filter(o => selected.includes(o.id)).map(o => o.name).join(', ');
 
   return (
@@ -36,8 +38,8 @@ const MultiSelectDropdown = ({ title, options, selected, onChange, disabled }) =
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 max-h-60 overflow-y-auto" align="start">
         {options.map(opt => (
-          <DropdownMenuCheckboxItem 
-            key={opt.id} 
+          <DropdownMenuCheckboxItem
+            key={opt.id}
             checked={selected.includes(opt.id)}
             onCheckedChange={() => toggle(opt.id)}
           >
@@ -80,10 +82,10 @@ const AdminListings = () => {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  
+
   // Multi-select states (arrays of IDs)
   const [filterType, setFilterType] = useState([]);
   const [filterBrand, setFilterBrand] = useState([]);
@@ -91,11 +93,11 @@ const AdminListings = () => {
   const [filterVariant, setFilterVariant] = useState([]);
   const [filterFuel, setFilterFuel] = useState([]);
   const [filterTransmission, setFilterTransmission] = useState([]);
-  
+
   // Single-select states
   const [filterPrice, setFilterPrice] = useState('ALL');
   const [ordering, setOrdering] = useState('ALL');
-  
+
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -190,16 +192,16 @@ const AdminListings = () => {
         const params = new URLSearchParams();
         params.append('page', 1);
         params.append('page_size', 1000);
-        
+
         if (debouncedSearch) params.append('search', debouncedSearch);
-        
+
         if (filterType.length > 0) params.append('vehicle_type_id', filterType.join(','));
         if (filterBrand.length > 0) params.append('brand_id', filterBrand.join(','));
         if (filterModel.length > 0) params.append('model_id', filterModel.join(','));
         if (filterVariant.length > 0) params.append('variant_id', filterVariant.join(','));
         if (filterFuel.length > 0) params.append('fuel_type_id', filterFuel.join(','));
         if (filterTransmission.length > 0) params.append('transmission_type_id', filterTransmission.join(','));
-        
+
         if (filterPrice !== 'ALL') {
           if (filterPrice === 'under1') params.append('max_price', 100000);
           else if (filterPrice === '1to5') { params.append('min_price', 100000); params.append('max_price', 500000); }
@@ -210,13 +212,29 @@ const AdminListings = () => {
         if (ordering && ordering !== 'ALL') params.append('ordering', ordering);
 
         const data = await vehicleService.getListingsDetails(params);
-        
-        // Setup pagination info
-        const results = data.results || [];
-        setTotalPages(Math.ceil((data.count || results.length) / 12));
-        setHasNext(Boolean(data.next));
-        setHasPrev(Boolean(data.previous));
-        
+
+        const payload = data.data || data;
+        let results = [];
+        let count = 0;
+        let next = null;
+        let prev = null;
+
+        if (payload && typeof payload === 'object') {
+          if (Array.isArray(payload)) {
+            results = payload;
+            count = payload.length;
+          } else if (payload.results) {
+            results = payload.results;
+            count = payload.count || results.length;
+            next = payload.next;
+            prev = payload.previous;
+          }
+        }
+
+        setTotalPages(Math.ceil(count / 12));
+        setHasNext(Boolean(next));
+        setHasPrev(Boolean(prev));
+
         setListings(results);
       } catch (error) {
         console.error('Failed to fetch listings:', error);
@@ -257,6 +275,19 @@ const AdminListings = () => {
     return val.toLocaleString('en-IN');
   };
 
+  const handleToggleFeatured = async (carId, currentStatus) => {
+    try {
+      await vehicleService.toggleFeaturedListing(carId, !currentStatus);
+      toast.success(currentStatus ? 'Listing removed from featured.' : 'Listing marked as featured.');
+      setListings(listings.map(listing =>
+        listing.id === carId ? { ...listing, is_featured: !currentStatus } : listing
+      ));
+    } catch (error) {
+      toast.error('Failed to update featured status.');
+      console.error(error);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 relative">
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 gap-6 border-b border-border/60 pb-5">
@@ -264,7 +295,7 @@ const AdminListings = () => {
           <h1 className="text-2xl font-bold text-foreground">All Listings</h1>
           <p className="text-muted-foreground mt-1">Manage and view all vehicle listings on the platform.</p>
         </div>
-        
+
         {/* Search & Filters */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
           {/* Filter Tabs (Vehicle Type Shortcut) */}
@@ -279,8 +310,8 @@ const AdminListings = () => {
                     setPage(1);
                   }}
                   className={`flex-1 sm:flex-none whitespace-nowrap px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${isSelected
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                     }`}
                 >
                   {type.name === 'All' ? 'All' : type.name === 'Other' ? 'Others' : `${type.name}s`}
@@ -303,7 +334,7 @@ const AdminListings = () => {
                 className="pl-9 h-10 w-full bg-background border-border/60 shadow-sm focus-visible:ring-primary/20"
               />
             </div>
-            <button 
+            <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center justify-center h-10 px-3 rounded-md border shadow-sm transition-colors ${showFilters || filterFuel.length > 0 || filterTransmission.length > 0 || filterPrice !== 'ALL' || filterVariant.length > 0 ? 'bg-primary/10 border-primary/20 text-primary' : 'bg-background border-border/60 text-muted-foreground hover:bg-muted'}`}
             >
@@ -326,38 +357,38 @@ const AdminListings = () => {
               </button>
             )}
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-5">
             {/* Vehicle Type */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Vehicle Type</label>
-              <MultiSelectDropdown 
-                title="Type" 
-                options={vehicleTypesList} 
-                selected={filterType} 
-                onChange={updateMultiFilter(setFilterType)} 
+              <MultiSelectDropdown
+                title="Type"
+                options={vehicleTypesList}
+                selected={filterType}
+                onChange={updateMultiFilter(setFilterType)}
               />
             </div>
 
             {/* Brand */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Brand</label>
-              <MultiSelectDropdown 
-                title="Brand" 
-                options={brandsList} 
-                selected={filterBrand} 
-                onChange={updateMultiFilter(setFilterBrand)} 
+              <MultiSelectDropdown
+                title="Brand"
+                options={brandsList}
+                selected={filterBrand}
+                onChange={updateMultiFilter(setFilterBrand)}
               />
             </div>
 
             {/* Model */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Model</label>
-              <MultiSelectDropdown 
-                title="Model" 
-                options={modelsList} 
-                selected={filterModel} 
-                onChange={updateMultiFilter(setFilterModel)} 
+              <MultiSelectDropdown
+                title="Model"
+                options={modelsList}
+                selected={filterModel}
+                onChange={updateMultiFilter(setFilterModel)}
                 disabled={filterBrand.length === 0 || modelsList.length === 0}
               />
             </div>
@@ -365,11 +396,11 @@ const AdminListings = () => {
             {/* Variant */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Variant</label>
-              <MultiSelectDropdown 
-                title="Variant" 
-                options={variantsList} 
-                selected={filterVariant} 
-                onChange={updateMultiFilter(setFilterVariant)} 
+              <MultiSelectDropdown
+                title="Variant"
+                options={variantsList}
+                selected={filterVariant}
+                onChange={updateMultiFilter(setFilterVariant)}
                 disabled={filterModel.length === 0 || variantsList.length === 0}
               />
             </div>
@@ -377,54 +408,54 @@ const AdminListings = () => {
             {/* Fuel Type */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fuel Type</label>
-              <MultiSelectDropdown 
-                title="Fuel" 
-                options={fuelTypesList} 
-                selected={filterFuel} 
-                onChange={updateMultiFilter(setFilterFuel)} 
+              <MultiSelectDropdown
+                title="Fuel"
+                options={fuelTypesList}
+                selected={filterFuel}
+                onChange={updateMultiFilter(setFilterFuel)}
               />
             </div>
 
             {/* Transmission */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Transmission</label>
-              <MultiSelectDropdown 
-                title="Transmission" 
-                options={transmissionTypesList} 
-                selected={filterTransmission} 
-                onChange={updateMultiFilter(setFilterTransmission)} 
+              <MultiSelectDropdown
+                title="Transmission"
+                options={transmissionTypesList}
+                selected={filterTransmission}
+                onChange={updateMultiFilter(setFilterTransmission)}
               />
             </div>
 
             {/* Price Range */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Price Range</label>
-              <SingleSelectDropdown 
-                title="Price" 
+              <SingleSelectDropdown
+                title="Price"
                 options={[
                   { id: 'under1', name: 'Under ₹1 Lakh' },
                   { id: '1to5', name: '₹1 Lakh - ₹5 Lakhs' },
                   { id: '5to10', name: '₹5 Lakhs - ₹10 Lakhs' },
                   { id: 'over10', name: 'Over ₹10 Lakhs' }
-                ]} 
-                selected={filterPrice} 
-                onChange={updateSingleFilter(setFilterPrice)} 
+                ]}
+                selected={filterPrice}
+                onChange={updateSingleFilter(setFilterPrice)}
               />
             </div>
 
             {/* Sort Order */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sort By</label>
-              <SingleSelectDropdown 
-                title="Sort" 
+              <SingleSelectDropdown
+                title="Sort"
                 options={[
                   { id: 'price_low', name: 'Price: Low to High' },
                   { id: 'price_high', name: 'Price: High to Low' },
                   { id: 'year_new', name: 'Year: Newest' },
                   { id: 'year_old', name: 'Year: Oldest' }
-                ]} 
-                selected={ordering} 
-                onChange={updateSingleFilter(setOrdering)} 
+                ]}
+                selected={ordering}
+                onChange={updateSingleFilter(setOrdering)}
               />
             </div>
           </div>
@@ -441,15 +472,15 @@ const AdminListings = () => {
             {listings.map((car) => {
               const displayImage = car.images?.find(img => img.image_type?.toLowerCase() === 'exterior' || img.image_type?.toLowerCase() === 'front')?.image_url || car.images?.[0]?.image_url;
               return (
-                <Card 
-                  key={car.id} 
+                <Card
+                  key={car.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group flex flex-col h-full"
                 >
                   <div className="h-48 bg-muted flex items-center justify-center border-b border-border overflow-hidden relative shrink-0">
                     {displayImage ? (
-                      <img 
-                        src={displayImage} 
-                        alt={`${car.brand} ${car.model}`} 
+                      <img
+                        src={displayImage}
+                        alt={`${car.brand} ${car.model}`}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
@@ -461,11 +492,36 @@ const AdminListings = () => {
                       <h3 className="font-bold text-lg text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                         {car.brand} {car.model} {car.variant}
                       </h3>
-                      <span className={`px-2.5 py-1 text-xs font-bold rounded-md uppercase tracking-wider shrink-0 ${
-                        car.status === 'ACTIVE' || car.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                      }`}>
+                      <span className={`px-2.5 py-1 text-xs font-bold rounded-md uppercase tracking-wider shrink-0 ${car.status === 'ACTIVE' || car.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                        }`}>
                         {car.status || 'Pending'}
                       </span>
+                    </div>
+                    <div className={`flex items-center justify-between mb-4 p-3 rounded-xl border transition-all ${car.is_featured
+                        ? 'bg-amber-50/50 border-amber-200/50 dark:bg-amber-950/20 dark:border-amber-900/50'
+                        : 'bg-muted/30 border-transparent hover:bg-muted/50'
+                      }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`flex items-center justify-center h-8 w-8 rounded-lg shadow-sm ${car.is_featured
+                            ? 'bg-gradient-to-br from-amber-400 to-amber-500'
+                            : 'bg-background border border-border/60'
+                          }`}>
+                          <Star className={`h-4 w-4 ${car.is_featured ? 'fill-white text-white' : 'text-muted-foreground'}`} />
+                        </div>
+                        <div>
+                          <p className={`text-sm font-bold ${car.is_featured ? 'text-amber-900 dark:text-amber-400' : 'text-foreground'}`}>
+                            Featured
+                          </p>
+                          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+                            {car.is_featured ? 'Promoted Listing' : 'Standard Listing'}
+                          </p>
+                        </div>
+                      </div>
+                      <Switch
+                        checked={car.is_featured || false}
+                        onCheckedChange={() => handleToggleFeatured(car.id, car.is_featured)}
+                        className={car.is_featured ? "data-[state=checked]:bg-amber-500" : ""}
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-y-1 mb-4 text-sm text-muted-foreground">
                       <p>Year: <span className="font-medium text-foreground">{car.year}</span></p>

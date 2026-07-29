@@ -3,7 +3,7 @@ import VehicleCard from '../vehicle/VehicleCard';
 import { ArrowRight, Loader2, Search, Filter, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { vehicleService } from '../../services/api';
+import { vehicleService, wishlistService } from '../../services/api';
 import { Input } from '../ui/input';
 import {
   DropdownMenu,
@@ -109,6 +109,26 @@ const DashboardFeaturedVehicles = () => {
   const [fuelTypesList, setFuelTypesList] = useState([]);
   const [transmissionTypesList, setTransmissionTypesList] = useState([]);
 
+  // Wishlist state
+  const [wishlistIds, setWishlistIds] = useState([]);
+
+  // Fetch wishlist
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      if (isAuthenticated) {
+        try {
+          const res = await wishlistService.viewWishlist();
+          if (res.success && res.data) {
+            setWishlistIds(res.data.map(item => String(item.listing_id || item.listing || item.id)));
+          }
+        } catch (err) {
+          console.error('Failed to fetch wishlist', err);
+        }
+      }
+    };
+    fetchWishlist();
+  }, [isAuthenticated]);
+
   // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -208,17 +228,35 @@ const DashboardFeaturedVehicles = () => {
 
         if (ordering && ordering !== 'ALL') params.append('ordering', ordering);
 
-        const data = await vehicleService.getListingsDetails(params);
+        const responseData = await vehicleService.getListingsDetails(params);
+        
+        let results = [];
+        let count = 0;
+        let next = null;
+        let prev = null;
+
+        const payload = responseData.data || responseData;
+
+        if (payload && typeof payload === 'object') {
+          if (Array.isArray(payload)) {
+            results = payload;
+            count = payload.length;
+          } else if (payload.results) {
+            results = payload.results;
+            count = payload.count || results.length;
+            next = payload.next;
+            prev = payload.previous;
+          }
+        }
 
         // Setup pagination info
-        const results = data.results || [];
-        setTotalPages(Math.ceil((data.count || results.length) / 12));
-        setHasNext(Boolean(data.next));
-        setHasPrev(Boolean(data.previous));
+        setTotalPages(Math.ceil(count / 12) || 1);
+        setHasNext(Boolean(next));
+        setHasPrev(Boolean(prev));
 
         const formattedVehicles = results.map((item) => {
           const frontImage = item.images?.find(img => img.image_type?.toLowerCase() === 'exterior' || img.image_type?.toLowerCase() === 'front');
-          const displayImage = frontImage ? frontImage.image_url : (item.images?.[0]?.image_url || 'https://placehold.co/800x600/e2e8f0/1e293b?text=No+Image');
+          const displayImage = frontImage ? (frontImage.image_url || frontImage.image) : (item.images?.[0]?.image_url || item.images?.[0]?.image || 'https://placehold.co/800x600/e2e8f0/1e293b?text=No+Image');
 
           const priceValue = parseFloat(item.price);
           let displayPrice = item.price ? `₹${item.price}` : 'N/A';
@@ -280,6 +318,35 @@ const DashboardFeaturedVehicles = () => {
   const updateSingleFilter = (setter) => (val) => {
     setter(val);
     setPage(1);
+  };
+
+  const handleToggleWishlist = async (e, vehicleId) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      alert("Please login to add to wishlist");
+      return;
+    }
+    const isW = wishlistIds.includes(String(vehicleId));
+    try {
+      if (isW) {
+        const res = await wishlistService.removeWishlist(vehicleId);
+        if (res.success) {
+          setWishlistIds(prev => prev.filter(id => id !== String(vehicleId)));
+        } else {
+          alert(res.message || 'Failed to remove from wishlist');
+        }
+      } else {
+        const res = await wishlistService.createWishlist(vehicleId);
+        if (res.success) {
+          setWishlistIds(prev => [...prev, String(vehicleId)]);
+        } else {
+          alert(res.message || 'Failed to add to wishlist');
+        }
+      }
+    } catch (err) {
+      console.error('Failed to toggle wishlist:', err);
+      alert('Error updating wishlist');
+    }
   };
 
   return (
@@ -469,7 +536,13 @@ const DashboardFeaturedVehicles = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {vehicles.map(vehicle => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} onViewDetails={() => navigate(`/dashboard/user/vehicle/${vehicle.id}`)} />
+              <VehicleCard 
+                key={vehicle.id} 
+                vehicle={vehicle} 
+                onViewDetails={() => navigate(`/dashboard/user/vehicle/${vehicle.id}`)}
+                isWishlisted={wishlistIds.includes(String(vehicle.id))}
+                onToggleWishlist={(e) => handleToggleWishlist(e, vehicle.id)}
+              />
             ))}
           </div>
 

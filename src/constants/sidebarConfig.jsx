@@ -11,10 +11,11 @@ export const SIDEBAR_CONFIG = {
       items: [
         { label: 'My Listings', path: '/dashboard/user/listings', icon: 'Car' },
         { label: 'List Vehicle', path: '/dashboard/user/post-vehicle', icon: 'Plus' },
+        { label: 'Featured Vehicles', path: '/dashboard/user/featured', icon: 'Star' },
         { label: 'Wishlist', path: '/dashboard/user/wishlist', icon: 'Heart' },
       ]
     },
-     {
+    {
       section: 'Services',
       items: [
         { label: 'Middleman Services', path: '/dashboard/user/middleman-services', icon: 'Handshake' },
@@ -60,6 +61,8 @@ export const SIDEBAR_CONFIG = {
       items: [
         { label: 'Users', path: '/dashboard/admin/users', icon: 'Users' },
         { label: 'All Listings', path: '/dashboard/admin/listings', icon: 'List' },
+        { label: 'Featured Vehicles', path: '/dashboard/admin/featured', icon: 'Star' },
+        { label: 'Reports', path: '/dashboard/admin/reports', icon: 'AlertTriangle' },
       ]
     },
     {

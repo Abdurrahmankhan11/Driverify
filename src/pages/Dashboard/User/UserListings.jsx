@@ -17,8 +17,9 @@ const UserListings = () => {
   useEffect(() => {
     const fetchMyListings = async () => {
       try {
-        const data = await vehicleService.getMyListings();
-        setListings(data);
+        const resData = await vehicleService.getMyListings();
+        const listingsArray = Array.isArray(resData) ? resData : (resData.data || []);
+        setListings(listingsArray);
       } catch (error) {
         console.error('Failed to fetch user listings:', error);
       } finally {
