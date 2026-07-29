@@ -150,6 +150,14 @@ export const vehicleService = {
     const res = await api.get('/mp/brands');
     return res.data.data;
   },
+  getSimilarListings: async (listingId) => {
+    const res = await api.get('/mp/similar/', { params: { listing_id: listingId } });
+    return res.data;
+  },
+  reportListing: async (listingId, data) => {
+    const res = await api.post(`/mp/reports/${listingId}/`, data);
+    return res.data;
+  },
   getModels: async (brandId) => {
     const res = await api.get('/mp/models', { params: { brand_id: brandId } });
     return res.data.data;
@@ -228,6 +236,14 @@ export const vehicleService = {
     const res = await api.patch(`/mp/my/vehicle-listings/${id}/update/`, data);
     return res.data;
   },
+  toggleFeaturedListing: async (id, isFeatured) => {
+    const res = await api.patch(`/mp/listings/${id}/feature/`, { is_featured: isFeatured });
+    return res.data;
+  },
+  getFeaturedListings: async () => {
+    const res = await api.get('/mp/listings/featured/');
+    return res.data;
+  },
 };
 
 export const adminService = {
@@ -255,6 +271,14 @@ export const adminService = {
     const res = await api.post(`/auth/admin/users/${userId}/unblock/`);
     return res.data;
   },
+  getReports: async (params) => {
+    const res = await api.get('/mp/admin/report-listings/', { params });
+    return res.data;
+  },
+  updateReportStatus: async (reportId, status) => {
+    const res = await api.patch(`/mp/admin/report-listings/${reportId}/status/`, { status });
+    return res.data;
+  }
 };
 
 export const paymentService = {
@@ -281,6 +305,21 @@ export const paymentService = {
   },
   getContact: async (listingId) => {
     const res = await api.get(`/p/listings/${listingId}/contact/`);
+    return res.data;
+  },
+};
+
+export const wishlistService = {
+  createWishlist: async (listingId) => {
+    const res = await api.post(`/mp/wishlist/${listingId}/`);
+    return res.data;
+  },
+  removeWishlist: async (listingId) => {
+    const res = await api.delete(`/mp/wishlist/delete/${listingId}/`);
+    return res.data;
+  },
+  viewWishlist: async () => {
+    const res = await api.get('/mp/wishlist/');
     return res.data;
   },
 };

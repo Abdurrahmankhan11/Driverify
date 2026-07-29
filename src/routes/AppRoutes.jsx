@@ -15,6 +15,7 @@ import CompleteProfile from '../pages/Auth/CompleteProfile';
 // Dashboards
 import UserDashboard from '../pages/Dashboard/User/UserDashboard.jsx';
 import UserListings from '../pages/Dashboard/User/UserListings.jsx';
+import UserFeaturedListings from '../pages/Dashboard/User/UserFeaturedListings.jsx';
 import UserWishlist from '../pages/Dashboard/User/UserWishlist.jsx';
 import MiddlemanServices from '../pages/Dashboard/User/MiddlemanServices.jsx';
 import ProfileView from '../pages/Dashboard/User/ProfileView.jsx';
@@ -24,6 +25,8 @@ import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard.jsx';
 import AdminUserList from '../pages/Dashboard/Admin/AdminUserList.jsx';
 import AdminUserDetail from '../pages/Dashboard/Admin/AdminUserDetail.jsx';
 import AdminListings from '../pages/Dashboard/Admin/AdminListings.jsx';
+import AdminFeaturedListings from '../pages/Dashboard/Admin/AdminFeaturedListings.jsx';
+import AdminReports from '../pages/Dashboard/Admin/AdminReports.jsx';
 import PostVehicleFlow from '../pages/Dashboard/PostVehicle/PostVehicleFlow.jsx';
 
 // Shared / Other
@@ -49,6 +52,7 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={['USER']} />}>
             <Route path="user" element={<UserDashboard />} />
             <Route path="user/listings" element={<UserListings />} />
+            <Route path="user/featured" element={<UserFeaturedListings />} />
             <Route path="user/wishlist" element={<UserWishlist />} />
             <Route path="user/middleman-services" element={<MiddlemanServices />} />
             <Route path="user/vehicle/:id" element={<VehicleDetails />} />
@@ -68,7 +72,9 @@ const AppRoutes = () => {
             <Route path="admin/users" element={<AdminUserList />} />
             <Route path="admin/users/:id" element={<AdminUserDetail />} />
             <Route path="admin/listings" element={<AdminListings />} />
+            <Route path="admin/featured" element={<AdminFeaturedListings />} />
             <Route path="admin/listings/:id" element={<VehicleDetails />} />
+            <Route path="admin/reports" element={<AdminReports />} />
             <Route path="admin/profile" element={<ProfileView />} />
             <Route path="admin/profile/edit" element={<UpdateProfile />} />
           </Route>

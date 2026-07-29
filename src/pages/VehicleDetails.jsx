@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { vehicleService, paymentService } from '../services/api';
-import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight, Lock, Unlock, AlertCircle, Handshake, Share2, Heart } from 'lucide-react';
+import { vehicleService, paymentService, wishlistService } from '../services/api';
+import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight, Lock, Unlock, AlertCircle, Handshake, Share2, Heart, AlertTriangle, ChevronDown } from 'lucide-react';
 import { FaWhatsapp } from "react-icons/fa";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '../components/ui/dialog';
+import { Button } from '../components/ui/button';
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -30,6 +32,18 @@ const VehicleDetails = () => {
   const [contactState, setContactState] = useState('LOCKED'); // LOCKED, PAYING, VERIFYING, UNLOCKED, FAILED
   const [paymentOrder, setPaymentOrder] = useState(null);
 
+  // Wishlist State
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [togglingWishlist, setTogglingWishlist] = useState(false);
+
+  // Report State
+  const [reportReason, setReportReason] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const [reportError, setReportError] = useState('');
+  const [reportSuccess, setReportSuccess] = useState('');
+
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -43,12 +57,20 @@ const VehicleDetails = () => {
             data.seller_name = contactData.seller_name;
             setContactState('UNLOCKED');
           } catch (err) {
-            // Expected 402 if not paid
             if (data.seller_phone) {
               setContactState('UNLOCKED');
             } else {
               setContactState('LOCKED');
             }
+          }
+
+          try {
+            const wishlistRes = await wishlistService.viewWishlist();
+            if (wishlistRes.success && wishlistRes.data) {
+              setIsWishlisted(wishlistRes.data.some(item => String(item.listing_id || item.listing || item.id) === String(id)));
+            }
+          } catch (err) {
+            console.error('Error fetching wishlist:', err);
           }
         } else if (data.seller_phone) {
           setContactState('UNLOCKED');
@@ -80,7 +102,6 @@ const VehicleDetails = () => {
       setContactState('UNLOCKED');
     } catch (err) {
       console.error('Error fetching contact:', err);
-      // If it fails because of 402, it stays locked. Otherwise maybe show error.
       setContactState('LOCKED');
     }
   };
@@ -118,7 +139,7 @@ const VehicleDetails = () => {
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_TGrPHY1I2Bmd6Q',
-      amount: parseFloat(order.amount) * 100, // amount in paisa
+      amount: parseFloat(order.amount) * 100,
       currency: order.currency || "INR",
       name: "Second Ride",
       description: "Contact Reveal Payment",
@@ -127,7 +148,7 @@ const VehicleDetails = () => {
         handlePaymentSuccess(response, order);
       },
       theme: {
-        color: "#0f172a", // Match your brand primary color
+        color: "#0f172a",
       },
       modal: {
         ondismiss: function () {
@@ -172,6 +193,74 @@ const VehicleDetails = () => {
       } catch (err) {
         console.error('Error cancelling order:', err);
       }
+    }
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!localStorage.getItem('accessToken')) {
+      alert('Please login to add to wishlist');
+      return;
+    }
+
+    setTogglingWishlist(true);
+    try {
+      if (isWishlisted) {
+        const res = await wishlistService.removeWishlist(id);
+        if (res.success) {
+          setIsWishlisted(false);
+        } else {
+          alert(res.message || 'Failed to remove from wishlist');
+        }
+      } else {
+        const res = await wishlistService.createWishlist(id);
+        if (res.success) {
+          setIsWishlisted(true);
+        } else {
+          alert(res.message || 'Failed to add to wishlist');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to toggle wishlist:', error);
+      alert('Error updating wishlist');
+    } finally {
+      setTogglingWishlist(false);
+    }
+  };
+
+  const handleReportListing = async () => {
+    setReportError('');
+    setReportSuccess('');
+    if (!reportReason) {
+      setReportError('Please select a reason.');
+      return;
+    }
+    if (!localStorage.getItem('accessToken')) {
+      setReportError('Please login to report a listing.');
+      return;
+    }
+    setSubmittingReport(true);
+    try {
+      const payload = { reason: reportReason };
+      if (reportDescription.trim()) {
+        payload.description = reportDescription;
+      }
+      const res = await vehicleService.reportListing(id, payload);
+      if (res.success) {
+        setReportSuccess(res.message || 'Listing reported successfully.');
+        setTimeout(() => {
+          setIsReportDialogOpen(false);
+          setReportReason('');
+          setReportDescription('');
+          setReportSuccess('');
+        }, 2000);
+      } else {
+        setReportError(res.message || 'Failed to report listing.');
+      }
+    } catch (err) {
+      console.error('Error reporting listing:', err);
+      setReportError(err.response?.data?.detail || err.response?.data?.message || 'Error submitting report.');
+    } finally {
+      setSubmittingReport(false);
     }
   };
 
@@ -245,10 +334,12 @@ const VehicleDetails = () => {
                   <Share2 size={18} />
                 </button>
                 <button
-                  className="bg-background/90 backdrop-blur-sm p-2 rounded-full text-foreground shadow-sm hover:bg-background transition-colors border border-border/50 focus-visible:outline-none"
-                  title="Add to Wishlist"
+                  onClick={handleToggleWishlist}
+                  disabled={togglingWishlist}
+                  className={`bg-background/90 backdrop-blur-sm p-2 rounded-full shadow-sm transition-colors border border-border/50 focus-visible:outline-none ${isWishlisted ? 'text-red-500 hover:bg-background' : 'text-foreground hover:bg-background'}`}
+                  title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
                 >
-                  <Heart size={18} />
+                  {togglingWishlist ? <Loader2 size={18} className="animate-spin" /> : <Heart size={18} className={isWishlisted ? "fill-current" : ""} />}
                 </button>
               </div>
               {images.length > 1 && (
@@ -363,7 +454,7 @@ const VehicleDetails = () => {
                   </p>
                 </div>
               )}
-              <div className="mt-auto pt-4 border-t border-border">
+              <div className="mt-auto pt-4 border-t border-border space-y-3">
                 {contactState === 'UNLOCKED' || vehicle.seller_phone ? (
                   <div className="flex gap-2">
                     <a
@@ -410,10 +501,110 @@ const VehicleDetails = () => {
                     {contactState === 'PAYING' || contactState === 'VERIFYING' ? (
                       <><Loader2 size={18} className="animate-spin" /> {contactState === 'PAYING' ? 'Processing...' : 'Verifying...'}</>
                     ) : (
-                      <><Lock size={18} /> Reveal Contact</>
+                      <><Lock size={18} /> Reveal Contact ₹10</>
                     )}
                   </button>
                 )}
+
+                <Dialog open={isReportDialogOpen} onOpenChange={(open) => {
+                  if (!open) {
+                    setReportError('');
+                    setReportSuccess('');
+                  }
+                  setIsReportDialogOpen(open);
+                }}>
+                  <DialogTrigger className="w-full bg-primary hover:bg-primary/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base">
+                    <AlertTriangle size={16} /> Report this listing
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md p-6 border-border bg-card">
+                    <DialogHeader className="mb-6">
+                      <DialogTitle className="text-2xl font-bold flex items-center gap-2 text-foreground">
+                        <AlertTriangle className="text-destructive h-6 w-6" />
+                        Report Listing
+                      </DialogTitle>
+                      <DialogDescription className="text-muted-foreground text-base mt-1">
+                        Help us maintain a safe community. Your report is strictly confidential.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    {reportError && (
+                      <div className="bg-destructive/10 text-destructive p-3 rounded-lg flex items-start gap-2 text-sm border border-destructive/20 animate-in fade-in slide-in-from-top-2">
+                        <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                        <p>{reportError}</p>
+                      </div>
+                    )}
+
+                    {reportSuccess && (
+                      <div className="bg-green-500/10 text-green-600 p-3 rounded-lg flex items-start gap-2 text-sm border border-green-500/20 animate-in fade-in slide-in-from-top-2">
+                        <CheckCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                        <p>{reportSuccess}</p>
+                      </div>
+                    )}
+
+                    <div className="flex flex-col gap-5 py-2">
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-foreground flex items-center gap-1">
+                          Why are you reporting this? <span className="text-destructive">*</span>
+                        </label>
+                        <div className="relative">
+                          <select
+                            className="w-full p-3.5 rounded-xl border border-input bg-background hover:bg-muted/50 text-sm focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none transition-all appearance-none cursor-pointer font-medium"
+                            value={reportReason}
+                            onChange={(e) => {
+                              setReportReason(e.target.value);
+                              setReportError('');
+                            }}
+                            disabled={submittingReport || reportSuccess}
+                          >
+                            <option value="" disabled>Select the most appropriate reason</option>
+                            <option value="Fraudulent listing">Fraudulent listing / Scam</option>
+                            <option value="Inaccurate information">Inaccurate vehicle information</option>
+                            <option value="Vehicle already sold">Vehicle is already sold</option>
+                            <option value="Fake contact details">Fake contact details</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                            <ChevronDown size={16} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-2 mt-2">
+                        <label className="text-sm font-semibold text-foreground flex justify-between">
+                          <span>Additional Details</span>
+                          <span className="text-muted-foreground font-normal">Optional</span>
+                        </label>
+                        <textarea
+                          className="w-full p-3.5 rounded-xl border border-input bg-background hover:bg-muted/50 min-h-[120px] text-sm resize-none focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none transition-all placeholder:text-muted-foreground/70"
+                          placeholder="Please provide any additional context to help us investigate faster..."
+                          value={reportDescription}
+                          onChange={(e) => setReportDescription(e.target.value)}
+                          disabled={submittingReport || reportSuccess}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter className="sm:justify-end gap-3 mt-6 border-none bg-transparent p-0 m-0 shadow-none rounded-none">
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsReportDialogOpen(false)}
+                        className="rounded-xl px-6 py-5 font-semibold bg-background"
+                        disabled={submittingReport}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleReportListing}
+                        disabled={submittingReport || !reportReason || reportSuccess}
+                        className={`rounded-xl px-8 py-5 font-semibold text-background shadow-sm transition-all duration-300 ${!reportReason ? 'bg-slate-300 text-slate-500 hover:bg-slate-300' : 'bg-primary hover:bg-primary/90'}`}
+                      >
+                        {submittingReport ? (
+                          <><Loader2 size={18} className="animate-spin mr-2" /> Submitting...</>
+                        ) : (
+                          'Submit Report'
+                        )}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>

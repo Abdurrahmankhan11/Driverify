@@ -2,7 +2,7 @@ import React from 'react';
 import { MapPin, Fuel, Gauge, Settings2, ShieldCheck, Car, Bike, Shield, Share2, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const VehicleCard = ({ vehicle, onViewDetails }) => {
+const VehicleCard = ({ vehicle, onViewDetails, isWishlisted, onToggleWishlist }) => {
   const navigate = useNavigate();
   const isCar = vehicle.type === 'Car';
 
@@ -38,9 +38,14 @@ const VehicleCard = ({ vehicle, onViewDetails }) => {
           >
             <Share2 size={14} />
           </button>
-           <button className="bg-background/95 backdrop-blur-sm p-1.5 rounded-full text-foreground shadow-sm  transition-colors border border-border/50 focus-visible:outline-none"
-           title="Add to Favorites">
-            <Heart size={14} />
+          <button
+            onClick={onToggleWishlist || ((e) => {
+              e.stopPropagation();
+              navigate('/login');
+            })}
+            className={`bg-background/95 backdrop-blur-sm p-1.5 rounded-full shadow-sm transition-colors border border-border/50 focus-visible:outline-none ${isWishlisted ? 'text-red-500 hover:bg-background' : 'text-foreground hover:bg-background'}`}
+            title={isWishlisted ? "Remove from Favorites" : "Add to Favorites"}>
+            <Heart size={14} className={isWishlisted ? "fill-current" : ""} />
           </button>
         </div>
       </div>
