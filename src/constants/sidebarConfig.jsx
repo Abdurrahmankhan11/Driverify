@@ -12,6 +12,7 @@ export const SIDEBAR_CONFIG = {
         { label: 'My Listings', path: '/dashboard/user/listings', icon: 'Car' },
         { label: 'List Vehicle', path: '/dashboard/user/post-vehicle', icon: 'Plus' },
         { label: 'Featured Vehicles', path: '/dashboard/user/featured', icon: 'Star' },
+        { label: 'Recently Viewed', path: '/dashboard/user/recently-viewed', icon: 'Clock' },
         { label: 'Wishlist', path: '/dashboard/user/wishlist', icon: 'Heart' },
       ]
     },

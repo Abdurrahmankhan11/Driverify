@@ -244,6 +244,10 @@ export const vehicleService = {
     const res = await api.get('/mp/listings/featured/');
     return res.data;
   },
+  getRecentlyViewed: async () => {
+    const res = await api.get('/mp/recently-viewed/');
+    return res.data;
+  },
 };
 
 export const adminService = {
