@@ -5,6 +5,7 @@ import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, Ch
 import { FaWhatsapp } from "react-icons/fa";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '../components/ui/dialog';
 import { Button } from '../components/ui/button';
+import SimilarListings from '../components/vehicle/SimilarListings';
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -311,12 +312,12 @@ const VehicleDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Left Column - Images */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden bg-muted border border-border relative">
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            <div className="aspect-[4/3] sm:aspect-video lg:aspect-auto lg:flex-1 w-full min-h-[300px] lg:min-h-[400px] rounded-2xl overflow-hidden bg-muted border border-border relative">
               <img
                 src={images[activeImage].image_url}
                 alt={`${vehicle.brand} ${vehicle.model}`}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-bold text-foreground shadow-sm uppercase tracking-wider flex items-center gap-2 border border-border/50">
                 <Car size={16} /> {vehicle.vehicle_type || 'Car'}
@@ -610,6 +611,9 @@ const VehicleDetails = () => {
           </div>
 
         </div>
+
+        {/* Similar Listings Section */}
+        <SimilarListings listingId={id} />
       </div>
     </div>
   );

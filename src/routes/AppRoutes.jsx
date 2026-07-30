@@ -16,6 +16,7 @@ import CompleteProfile from '../pages/Auth/CompleteProfile';
 import UserDashboard from '../pages/Dashboard/User/UserDashboard.jsx';
 import UserListings from '../pages/Dashboard/User/UserListings.jsx';
 import UserFeaturedListings from '../pages/Dashboard/User/UserFeaturedListings.jsx';
+import UserRecentlyViewed from '../pages/Dashboard/User/UserRecentlyViewed.jsx';
 import UserWishlist from '../pages/Dashboard/User/UserWishlist.jsx';
 import MiddlemanServices from '../pages/Dashboard/User/MiddlemanServices.jsx';
 import ProfileView from '../pages/Dashboard/User/ProfileView.jsx';
@@ -53,6 +54,7 @@ const AppRoutes = () => {
             <Route path="user" element={<UserDashboard />} />
             <Route path="user/listings" element={<UserListings />} />
             <Route path="user/featured" element={<UserFeaturedListings />} />
+            <Route path="user/recently-viewed" element={<UserRecentlyViewed />} />
             <Route path="user/wishlist" element={<UserWishlist />} />
             <Route path="user/middleman-services" element={<MiddlemanServices />} />
             <Route path="user/vehicle/:id" element={<VehicleDetails />} />
