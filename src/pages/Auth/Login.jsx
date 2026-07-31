@@ -138,8 +138,8 @@ const Login = () => {
                 type="button"
                 onClick={() => { setChannel('PHONE'); setIdentifier(''); setError(''); }}
                 className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channel === 'PHONE'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
                   }`}
               >
                 Phone Number
@@ -148,8 +148,8 @@ const Login = () => {
                 type="button"
                 onClick={() => { setChannel('EMAIL'); setIdentifier(''); setError(''); }}
                 className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channel === 'EMAIL'
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
                   }`}
               >
                 Email Address
@@ -165,8 +165,8 @@ const Login = () => {
                 </label>
 
                 <div className={`flex items-center rounded-xl border ${error
-                    ? 'border-destructive ring-2 ring-destructive/20'
-                    : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
+                  ? 'border-destructive ring-2 ring-destructive/20'
+                  : 'border-border focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20'
                   } bg-background transition-all duration-200 overflow-hidden`}>
 
                   {/* Phone prefix only for phone channel */}
@@ -211,8 +211,8 @@ const Login = () => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${isSubmitting
-                    ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
-                    : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
+                  ? 'bg-muted-foreground text-background/70 cursor-not-allowed'
+                  : 'bg-foreground hover:bg-foreground/90 text-background active:scale-[0.98]'
                   }`}
               >
                 {isSubmitting ? (

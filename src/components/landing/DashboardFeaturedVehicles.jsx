@@ -229,7 +229,7 @@ const DashboardFeaturedVehicles = () => {
         if (ordering && ordering !== 'ALL') params.append('ordering', ordering);
 
         const responseData = await vehicleService.getListingsDetails(params);
-        
+
         let results = [];
         let count = 0;
         let next = null;
@@ -536,9 +536,9 @@ const DashboardFeaturedVehicles = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {vehicles.map(vehicle => (
-              <VehicleCard 
-                key={vehicle.id} 
-                vehicle={vehicle} 
+              <VehicleCard
+                key={vehicle.id}
+                vehicle={vehicle}
                 onViewDetails={() => navigate(`/dashboard/user/vehicle/${vehicle.id}`)}
                 isWishlisted={wishlistIds.includes(String(vehicle.id))}
                 onToggleWishlist={(e) => handleToggleWishlist(e, vehicle.id)}

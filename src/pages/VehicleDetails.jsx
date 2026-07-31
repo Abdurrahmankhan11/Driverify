@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { vehicleService, paymentService, wishlistService } from '../services/api';
+import { vehicleService, paymentService, wishlistService, negotiationService } from '../services/api';
 import { Loader2, ArrowLeft, MapPin, Fuel, Gauge, Settings2, Calendar, Phone, CheckCircle, Car, ChevronLeft, ChevronRight, Lock, Unlock, AlertCircle, Handshake, Share2, Heart, AlertTriangle, ChevronDown } from 'lucide-react';
 import { FaWhatsapp } from "react-icons/fa";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '../components/ui/dialog';
@@ -44,6 +44,13 @@ const VehicleDetails = () => {
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [reportError, setReportError] = useState('');
   const [reportSuccess, setReportSuccess] = useState('');
+
+  // Middleman State
+  const [isMiddlemanDialogOpen, setIsMiddlemanDialogOpen] = useState(false);
+  const [middlemanMessage, setMiddlemanMessage] = useState('');
+  const [submittingMiddleman, setSubmittingMiddleman] = useState(false);
+  const [middlemanError, setMiddlemanError] = useState('');
+  const [middlemanSuccess, setMiddlemanSuccess] = useState('');
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -265,6 +272,37 @@ const VehicleDetails = () => {
     }
   };
 
+  const handleHireMiddleman = async () => {
+    setMiddlemanError('');
+    setMiddlemanSuccess('');
+    if (!middlemanMessage.trim()) {
+      setMiddlemanError('Please enter a message or your expected price.');
+      return;
+    }
+    if (!localStorage.getItem('accessToken')) {
+      setMiddlemanError('Please login to hire a middleman.');
+      return;
+    }
+    setSubmittingMiddleman(true);
+    try {
+      const res = await negotiationService.hireMiddleman({
+        listing_id: id,
+        message: middlemanMessage
+      });
+      setMiddlemanSuccess(res.message || 'Middleman requested successfully.');
+      setTimeout(() => {
+        setIsMiddlemanDialogOpen(false);
+        setMiddlemanMessage('');
+        setMiddlemanSuccess('');
+      }, 2000);
+    } catch (err) {
+      console.error('Error hiring middleman:', err);
+      setMiddlemanError(err.response?.data?.detail || err.response?.data?.message || 'Error submitting request.');
+    } finally {
+      setSubmittingMiddleman(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex justify-center items-center min-h-[60vh]">
@@ -412,12 +450,45 @@ const VehicleDetails = () => {
                 </div>
               </div>
 
-              <button
-                onClick={() => navigate('/dashboard/user/middleman-services')}
-                className="w-full bg-primary hover:bg-primary/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                <Handshake size={16} />  Hire a Middleman
-              </button>
+              <Dialog open={isMiddlemanDialogOpen} onOpenChange={setIsMiddlemanDialogOpen}>
+                <DialogTrigger asChild>
+                  <button
+                    className="w-full bg-primary hover:bg-primary/90 text-background py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-base disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    <Handshake size={16} />  Hire a Middleman
+                  </button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Hire a Middleman</DialogTitle>
+                    <DialogDescription>
+                      Propose a negotiation price or leave a message for the middleman to handle the deal securely.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">Message / Expected Price</label>
+                      <textarea
+                        className="w-full min-h-[100px] rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        placeholder="e.g. I want to buy this car for ₹4.5 Lakhs, please negotiate."
+                        value={middlemanMessage}
+                        onChange={(e) => setMiddlemanMessage(e.target.value)}
+                      />
+                    </div>
+                    {middlemanError && <p className="text-sm text-red-500">{middlemanError}</p>}
+                    {middlemanSuccess && <p className="text-sm text-green-500">{middlemanSuccess}</p>}
+                  </div>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline" type="button">Cancel</Button>
+                    </DialogClose>
+                    <Button onClick={handleHireMiddleman} disabled={submittingMiddleman || middlemanSuccess}>
+                      {submittingMiddleman ? <Loader2 size={16} className="animate-spin mr-2" /> : null}
+                      Submit Request
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
 
               <div className="mb-4 pt-2">
                 <h3 className="text-sm font-bold text-foreground mb-2 pb-2 border-b border-border">Vehicle Highlights</h3>

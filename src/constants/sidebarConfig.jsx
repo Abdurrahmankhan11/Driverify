@@ -20,6 +20,7 @@ export const SIDEBAR_CONFIG = {
       section: 'Services',
       items: [
         { label: 'Middleman Services', path: '/dashboard/user/middleman-services', icon: 'Handshake' },
+        { label: 'My Negotiations', path: '/dashboard/user/negotiations', icon: 'Handshake' },
       ]
     },
     {
@@ -39,8 +40,7 @@ export const SIDEBAR_CONFIG = {
     {
       section: 'Management',
       items: [
-        { label: 'Active Deals', path: '/dashboard/middleman/deals', icon: 'Briefcase' },
-        { label: 'Inspections', path: '/dashboard/middleman/inspections', icon: 'ClipboardCheck' },
+        { label: 'Requests', path: '/dashboard/middleman/requests', icon: 'Briefcase' },
       ]
     },
     {
@@ -64,6 +64,7 @@ export const SIDEBAR_CONFIG = {
         { label: 'All Listings', path: '/dashboard/admin/listings', icon: 'List' },
         { label: 'Featured Vehicles', path: '/dashboard/admin/featured', icon: 'Star' },
         { label: 'Reports', path: '/dashboard/admin/reports', icon: 'AlertTriangle' },
+        { label: 'Middleman Requests', path: '/dashboard/admin/middleman', icon: 'Handshake' },
       ]
     },
     {

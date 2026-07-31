@@ -19,15 +19,18 @@ import UserFeaturedListings from '../pages/Dashboard/User/UserFeaturedListings.j
 import UserRecentlyViewed from '../pages/Dashboard/User/UserRecentlyViewed.jsx';
 import UserWishlist from '../pages/Dashboard/User/UserWishlist.jsx';
 import MiddlemanServices from '../pages/Dashboard/User/MiddlemanServices.jsx';
+import BuyerNegotiations from '../pages/Dashboard/User/BuyerNegotiations.jsx';
 import ProfileView from '../pages/Dashboard/User/ProfileView.jsx';
 import UpdateProfile from '../pages/Dashboard/User/UpdateProfile.jsx';
 import MiddlemanDashboard from '../pages/Dashboard/Middleman/MiddlemanDashboard.jsx';
+import MiddlemanRequests from '../pages/Dashboard/Middleman/MiddlemanRequests.jsx';
 import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard.jsx';
 import AdminUserList from '../pages/Dashboard/Admin/AdminUserList.jsx';
 import AdminUserDetail from '../pages/Dashboard/Admin/AdminUserDetail.jsx';
 import AdminListings from '../pages/Dashboard/Admin/AdminListings.jsx';
 import AdminFeaturedListings from '../pages/Dashboard/Admin/AdminFeaturedListings.jsx';
 import AdminReports from '../pages/Dashboard/Admin/AdminReports.jsx';
+import AdminMiddlemanList from '../pages/Dashboard/Admin/AdminMiddlemanList.jsx';
 import PostVehicleFlow from '../pages/Dashboard/PostVehicle/PostVehicleFlow.jsx';
 
 // Shared / Other
@@ -62,11 +65,13 @@ const AppRoutes = () => {
             <Route path="user/post-vehicle" element={<PostVehicleFlow />} />
             <Route path="user/profile" element={<ProfileView />} />
             <Route path="user/profile/edit" element={<UpdateProfile />} />
+            <Route path="user/negotiations" element={<BuyerNegotiations />} />
           </Route>
 
           {/* MIDDLEMAN Role Routes */}
           <Route element={<RoleRoute allowedRoles={['MIDDLEMAN']} />}>
             <Route path="middleman" element={<MiddlemanDashboard />} />
+            <Route path="middleman/requests" element={<MiddlemanRequests />} />
           </Route>
 
           <Route element={<RoleRoute allowedRoles={['ADMIN']} />}>
@@ -77,6 +82,7 @@ const AppRoutes = () => {
             <Route path="admin/featured" element={<AdminFeaturedListings />} />
             <Route path="admin/listings/:id" element={<VehicleDetails />} />
             <Route path="admin/reports" element={<AdminReports />} />
+            <Route path="admin/middleman" element={<AdminMiddlemanList />} />
             <Route path="admin/profile" element={<ProfileView />} />
             <Route path="admin/profile/edit" element={<UpdateProfile />} />
           </Route>

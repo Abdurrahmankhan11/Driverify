@@ -328,4 +328,35 @@ export const wishlistService = {
   },
 };
 
+export const negotiationService = {
+  hireMiddleman: async (data) => {
+    const res = await api.post('/n/middleman/request/', data);
+    return res.data;
+  },
+  assignMiddleman: async (id, data) => {
+    const res = await api.patch(`/n/middleman/${id}/assign/`, data);
+    return res.data;
+  },
+  updateNegotiationStatus: async (id, data) => {
+    const res = await api.patch(`/n/middleman/${id}/status/`, data);
+    return res.data;
+  },
+  completeNegotiation: async (id, data) => {
+    const res = await api.patch(`/n/middleman/${id}/complete/`, data);
+    return res.data;
+  },
+  getBuyerHistory: async () => {
+    const res = await api.get('/n/middleman/history/');
+    return res.data;
+  },
+  getMiddlemanDashboard: async () => {
+    const res = await api.get('/n/middleman/dashboard/');
+    return res.data;
+  },
+  getAdminMiddlemanDashboard: async () => {
+    const res = await api.get('/n/admin/middleman/');
+    return res.data;
+  },
+};
+
 export default api;
